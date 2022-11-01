@@ -7,7 +7,7 @@ RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION
 
 RUN apt-get update && \
-    apt-get install -y git vim
+    apt-get install -y git vim unzip
 #    libzip-dev libcurl4-openssl-dev pkg-config libssl-dev libxml2-dev unzip librabbitmq-dev
 
 

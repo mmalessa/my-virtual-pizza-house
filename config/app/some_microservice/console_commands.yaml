@@ -1,5 +1,0 @@
-services:
-    App\SomeMicroservice\UI\Command\:
-        resource: '%kernel.project_dir%/src/SomeMicroservice/UI/Command/*.php'
-        tags:
-            - { name: console.command }

@@ -1,6 +1,6 @@
-# My PHP playground
-A space to explore PHP best practices
-
+# My Virtual Pizzeria
+A space to explore PHP best practices  
+...on the example of a pizzeria.
 
 ## Kickstart
 ```shell

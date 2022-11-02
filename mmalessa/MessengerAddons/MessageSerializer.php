@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mmalessa\MessengerAddons;
 
-use App\Waiter\SomeMessage;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\BusNameStamp;
+use Symfony\Component\Messenger\Stamp\ReceivedStamp;
+use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class MessageSerializer implements SerializerInterface
@@ -20,12 +24,13 @@ class MessageSerializer implements SerializerInterface
 
     public function encode(Envelope $envelope): array
     {
+        /** @var MessageInterface $message */
         $message = $envelope->getMessage();
         $headers = [
             'Content-Type' => 'application/json',
         ];
         $body = [
-            'type' => $this->getMessageTypeFromClassName(get_class($message)),
+            'type' => MessagePrefix::remove(get_class($message), $this->messageClassPrefix),
             'payload' => $this->autoSerializeMessage($message)
         ];
         return [
@@ -39,29 +44,20 @@ class MessageSerializer implements SerializerInterface
         $body = $encodedEnvelope['body'];
         $headers = $encodedEnvelope['headers'];
         try {
+            /** @var MessageInterface $payload */
             $payload = $this->autoDeserializeMessage($body);
             $envelope = new Envelope($payload);
+            $envelope = $envelope->with(new RedeliveryStamp($this->getRetryCount($headers)));
+            $envelope = $envelope->with(new ReceivedStamp(''));
+            $envelope = $envelope->with(new BusNameStamp($this->targetBusName));
             return $envelope;
         } catch (\Exception $e) {
-            throw $e; //FIXME
+            // TODO
+            throw $e;
         }
     }
 
-    private function getMessageTypeFromClassName(string $className): string
-    {
-        echo "CN: $className\n";
-        echo "PF: " . $this->messageClassPrefix . PHP_EOL;
-        $pattern =sprintf("/^%s/", preg_quote($this->messageClassPrefix));
-        echo "P: " . $pattern . PHP_EOL;
-        return preg_replace($pattern,'',$className,1);
-    }
-
-    private function getClassNameFromMessageType(string $messageType): string
-    {
-        return sprintf("%s%s", $this->messageClassPrefix, $messageType);
-    }
-
-    private function autoSerializeMessage($message): array
+    private function autoSerializeMessage(MessageInterface $message): array
     {
         $reflection = new \ReflectionClass(get_class($message));
         $constructor = $reflection->getConstructor();
@@ -88,25 +84,41 @@ class MessageSerializer implements SerializerInterface
         return $serializedMessage;
     }
 
-    private function autoDeserializeMessage(string $body)
+    private function autoDeserializeMessage(string $body): MessageInterface
     {
-        $arrayBody = json_decode($body, true);
-        $type = $arrayBody['type'];
-        $payload = $arrayBody['payload'];
+        try {
+            $arrayBody = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+            $type = $arrayBody['type'];
+            $payload = $arrayBody['payload'];
 
-        $className = $this->getClassNameFromMessageType($type);
-        $classParameters = [];
-        $reflection = new \ReflectionClass($className);
-        $constructor = $reflection->getConstructor();
-        if (null !== $constructor) {
-            $parameters = $constructor->getParameters();
-            foreach ($parameters as $parameter) {
-                $parameterName = $parameter->getName();
-                $parameterValue = $payload[$parameterName] ?? null;
-                $classParameters[] = $parameterValue;
+            $className = MessagePrefix::add($type, $this->messageClassPrefix);
+            $classParameters = [];
+            $reflection = new \ReflectionClass($className);
+            $constructor = $reflection->getConstructor();
+            if (null !== $constructor) {
+                $parameters = $constructor->getParameters();
+                foreach ($parameters as $parameter) {
+                    $parameterName = $parameter->getName();
+                    $parameterValue = $payload[$parameterName] ?? null;
+                    $classParameters[] = $parameterValue;
+                }
             }
+            $message = $reflection->newInstanceArgs($classParameters);
+            return $message;
+        } catch (\JsonException $e) {
+            //TODO
+            throw $e;
+        } catch (\Exception $e) {
+            //TODO
+            throw $e;
         }
-        $message = $reflection->newInstanceArgs($classParameters);
-        return $message;
+    }
+
+    private function getRetryCount(array $headers): int
+    {
+        if (!array_key_exists('x-death', $headers)) {
+            return 0;
+        }
+        return array_sum(array_column($headers['x-death'],'count'));
     }
 }

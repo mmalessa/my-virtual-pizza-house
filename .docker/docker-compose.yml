@@ -1,16 +1,56 @@
-version: '3.1'
+version: '3.7'
 
 services:
 
-  app:
-    image: ${APP_IMAGE}
-    container_name: ${CONTAINER_NAME}
-    restart: on-failure
-    volumes:
-      - ../:/app/
-    working_dir: /app
-    # ports:
-    #   - 80:80
-    #   - 443:443
-    # command: [tail, '-f', /dev/null]
-    tty: true
+    app:
+        image: ${APP_IMAGE}
+        container_name: ${CONTAINER_NAME}
+        restart: on-failure
+        volumes:
+            - ../:/app/
+        working_dir: /app
+        tty: true
+        networks:
+            devapp:
+
+    dev-rabbitmq:
+        image: rabbitmq:3.11.2-management
+        container_name: dev-rabbitmq
+        restart: on-failure
+        ports: [ 5672:5672, 15672:15672 ]
+        networks:
+            devapp:
+        volumes:
+            - rabbitmq_mnesia:/var/lib/rabbitmq/mnesia
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+
+
+    dev-redis:
+        image: redis:7.0.5
+        container_name: dev-redis
+        restart: on-failure
+        volumes:
+            - redis_data:/data
+        networks:
+            devapp:
+        ports: [ 6379:6379 ]
+
+    dev-redis-commander:
+        image: rediscommander/redis-commander:latest
+        container_name: dev-redis-commander
+        restart: on-failure
+        environment:
+            REDIS_HOSTS: local:dev-redis:6379
+        networks:
+            devapp:
+        ports: [ 8081:8081 ]
+
+networks:
+    devapp:
+        name: devapp
+
+volumes:
+    redis_data:
+    rabbitmq_mnesia:

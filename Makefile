@@ -1,4 +1,4 @@
-APP_NAME			= my_virtual_pizzeria
+APP_NAME			= my_virtual_pizza_house
 BASE_IMAGE			?= php:8.1.12-cli
 ####
 

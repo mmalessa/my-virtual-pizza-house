@@ -1,6 +1,6 @@
-# My Virtual Pizzeria
+# My Virtual Pizza House
 A space to explore PHP best practices  
-...on the example of a pizzeria.
+...on the example of a pizza house.
 
 ## Kickstart
 ```shell

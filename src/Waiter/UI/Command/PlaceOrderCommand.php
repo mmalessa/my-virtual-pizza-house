@@ -25,7 +25,8 @@ class PlaceOrderCommand extends Command
         $output->writeln("PlaceOrderCommand");
 
         $order = [];
-        $message = new PlaceOrder("T001", $order);
+        $timestamp = date("Y-m-d H:i:s");
+        $message = new PlaceOrder("T001", $order, $timestamp);
         $this->messageBus->dispatch($message);
         return Command::SUCCESS;
     }

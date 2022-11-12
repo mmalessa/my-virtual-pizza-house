@@ -3,3 +3,5 @@ services:
         resource: '%kernel.project_dir%/src/Waiter/Application/MessageHandler/*Handler.php'
         tags:
             - { name: messenger.message_handler }
+        bind:
+            $messageBus: '@waiter.message.bus'

@@ -24,8 +24,8 @@ class PlaceOrderCommand extends Command
     {
         $output->writeln("PlaceOrderCommand");
 
-//        $message = new OrderPlaced("T001");
-        $message = new PlaceOrder("T001");
+        $order = [];
+        $message = new PlaceOrder("T001", $order);
         $this->messageBus->dispatch($message);
         return Command::SUCCESS;
     }

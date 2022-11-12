@@ -7,7 +7,8 @@ use App\Waiter\Application\Message\WaiterMessageInterface;
 class OrderPlaced implements WaiterMessageInterface
 {
     public function __construct(
-        public string $tableId
+        public readonly string $tableId,
+        public readonly array $order
     )
     {
     }

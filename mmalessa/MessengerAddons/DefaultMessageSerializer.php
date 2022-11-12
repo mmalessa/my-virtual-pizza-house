@@ -4,57 +4,37 @@ declare(strict_types=1);
 
 namespace Mmalessa\MessengerAddons;
 
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Stamp\BusNameStamp;
-use Symfony\Component\Messenger\Stamp\ReceivedStamp;
-use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
-
-class MessageSerializer implements SerializerInterface
+class DefaultMessageSerializer implements MessageSerializerInterface
 {
     private CONST ALLOWED_TYPES = ["string", "int", "float", "array"];
 
     public function __construct(
-        private string $targetBusName,
         private string $messageClassPrefix
     )
     {
         $this->messageClassPrefix = sprintf("%s\\", rtrim($this->messageClassPrefix, '\\'));
     }
 
-    public function encode(Envelope $envelope): array
+    public function getMessageClassPrefix(): string
     {
-        /** @var MessageInterface $message */
-        $message = $envelope->getMessage();
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-        $body = [
-            'type' => MessagePrefix::remove(get_class($message), $this->messageClassPrefix),
-            'payload' => $this->autoSerializeMessage($message)
-        ];
-        return [
-            'body' => json_encode($body),
-            'headers' => $headers
-        ];
+        return $this->messageClassPrefix;
     }
 
-    public function decode(array $encodedEnvelope): Envelope
+    public function serialize(MessageInterface $message): array
     {
-        $body = $encodedEnvelope['body'];
-        $headers = $encodedEnvelope['headers'];
-        try {
-            /** @var MessageInterface $payload */
-            $payload = $this->autoDeserializeMessage($body);
-            $envelope = new Envelope($payload);
-            $envelope = $envelope->with(new RedeliveryStamp($this->getRetryCount($headers)));
-            $envelope = $envelope->with(new ReceivedStamp(''));
-            $envelope = $envelope->with(new BusNameStamp($this->targetBusName));
-            return $envelope;
-        } catch (\Exception $e) {
-            // TODO
-            throw $e;
+        if(method_exists($message, 'serialize')) {
+            return $message->serialize();
         }
+        return $this->autoSerializeMessage($message);
+    }
+
+    public function deserialize(string $type, array $payload): MessageInterface
+    {
+        $className = MessagePrefix::add($type, $this->messageClassPrefix);
+        if(method_exists($className, 'deserialize')) {
+            $className::deserialize($payload);
+        }
+        return $this->autoDeserializeMessage($type, $payload);
     }
 
     private function autoSerializeMessage(MessageInterface $message): array
@@ -84,13 +64,9 @@ class MessageSerializer implements SerializerInterface
         return $serializedMessage;
     }
 
-    private function autoDeserializeMessage(string $body): MessageInterface
+    private function autoDeserializeMessage(string $type, array $payload): MessageInterface
     {
         try {
-            $arrayBody = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-            $type = $arrayBody['type'];
-            $payload = $arrayBody['payload'];
-
             $className = MessagePrefix::add($type, $this->messageClassPrefix);
             $classParameters = [];
             $reflection = new \ReflectionClass($className);
@@ -112,13 +88,5 @@ class MessageSerializer implements SerializerInterface
             //TODO
             throw $e;
         }
-    }
-
-    private function getRetryCount(array $headers): int
-    {
-        if (!array_key_exists('x-death', $headers)) {
-            return 0;
-        }
-        return array_sum(array_column($headers['x-death'],'count'));
     }
 }

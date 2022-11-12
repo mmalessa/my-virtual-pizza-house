@@ -2,11 +2,16 @@ parameters:
     app.waiter.message_class_prefix: 'App\Waiter\Application\Message'
 
 services:
+    app.waiter.message.serializer:
+        class: 'Mmalessa\MessengerAddons\DefaultMessageSerializer'
+        arguments:
+            $messageClassPrefix: '%app.waiter.message_class_prefix%'
+
     app.waiter.messagebus.serializer:
-        class: 'Mmalessa\MessengerAddons\MessageSerializer'
+        class: 'Mmalessa\MessengerAddons\AmqpMessageSerializer'
         arguments:
             $targetBusName: 'waiter.message.bus'
-            $messageClassPrefix: '%app.waiter.message_class_prefix%'
+            $messageSerializer: '@app.waiter.message.serializer'
 
     app.waiter.messagebus.middleware.add_stamp:
         class: 'Mmalessa\MessengerAddons\AddAmqpStampMiddleware'
@@ -21,12 +26,12 @@ framework:
                 serializer: 'app.waiter.messagebus.serializer'
                 options:
                     exchange:
-                        name: pizzeria_messages
+                        name: pizza_house_messages
                         type: topic
                     queues:
                         messages_for_waiter:
                             binding_keys:
-                                - 'Some.Key'
+                                - 'Waiter.Command.*'
                 retry_strategy:
                     max_retries: 2
                     delay: 2000

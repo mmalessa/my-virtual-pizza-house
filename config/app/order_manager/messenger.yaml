@@ -1,0 +1,45 @@
+parameters:
+    app.order_manager.message_class_prefix: 'App\OrderManager\Application\Message'
+
+services:
+    app.order_manager.message.serializer:
+        class: 'Mmalessa\MessengerAddons\DefaultMessageSerializer'
+        arguments:
+            $messageClassPrefix: '%app.order_manager.message_class_prefix%'
+
+    app.order_manager.messagebus.serializer:
+        class: 'Mmalessa\MessengerAddons\AmqpMessageSerializer'
+        arguments:
+            $targetBusName: 'order_manager.message.bus'
+            $messageSerializer: '@app.order_manager.message.serializer'
+
+    app.order_manager.messagebus.middleware.add_stamp:
+        class: 'Mmalessa\MessengerAddons\AddAmqpStampMiddleware'
+        arguments:
+            $messageClassPrefix: '%app.order_manager.message_class_prefix%'
+
+framework:
+    messenger:
+        transports:
+            order_manager_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: 'app.order_manager.messagebus.serializer'
+                options:
+                    exchange:
+                        name: pizza_house_messages
+                        type: topic
+                    queues:
+                        messages_for_order_manager:
+                            binding_keys:
+                                - 'OrderManager.Command.*'
+                                - '*.Event.*'
+                retry_strategy:
+                    max_retries: 2
+                    delay: 2000
+                    multiplier: 4
+        routing:
+            'App\OrderManager\Application\Message\OrderManagerMessageInterface': order_manager_transport
+        buses:
+            order_manager.message.bus:
+                middleware:
+                    - 'app.order_manager.messagebus.middleware.add_stamp'

@@ -1,0 +1,8 @@
+services:
+    App\OrderManager\Application\MessageSubscriber\:
+        resource: '%kernel.project_dir%/src/OrderManager/Application/MessageSubscriber/*Subscriber.php'
+        tags:
+            - { name: messenger.message_handler, from_transport: order_manager_transport}
+        bind:
+            $messageBus: '@order_manager.message.bus'
+            $logger: '@monolog.logger.order_manager'

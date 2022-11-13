@@ -10,8 +10,7 @@ class PlaceOrder implements WaiterMessageInterface
 {
     public function __construct(
         public readonly string $tableId,
-        public readonly array $order,
-        public readonly string $timestamp
+        public readonly array $order
     )
     {
     }

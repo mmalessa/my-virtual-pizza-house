@@ -6,7 +6,7 @@ namespace App\Waiter\Domain\Menu;
 
 use Mmalessa\AutoSerializer\AutoSerializer;
 
-class MenuItem
+abstract class MenuItem
 {
     public function serialize(): array
     {

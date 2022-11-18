@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Waiter\Application\Message\Waiter\Event;
+namespace App\Tests\Unit\Waiter\Application\Message\Waiter\Event;
 
 use App\Waiter\Application\Message\Waiter\Event\OrderPlaced;
 use PHPUnit\Framework\TestCase;

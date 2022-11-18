@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Waiter\Domain\Menu\Pizza;
+namespace App\Tests\Unit\Waiter\Domain\Menu\Pizza;
 
 use App\Waiter\Domain\Menu\Pizza\Pizza;
 use App\Waiter\Domain\Menu\Pizza\PizzaSize;

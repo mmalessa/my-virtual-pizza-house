@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Waiter\Application\Message\Waiter\Command;
+namespace App\Tests\Unit\Waiter\Application\Message\Waiter\Command;
 
 use App\Waiter\Application\Message\Waiter\Command\PlaceOrder;
 use PHPUnit\Framework\TestCase;

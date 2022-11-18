@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Waiter\Domain\Menu\SoftDrink;
+namespace App\Tests\Unit\Waiter\Domain\Menu\SoftDrink;
 
 use App\Waiter\Domain\Menu\SoftDrink\SoftDrink;
 use App\Waiter\Domain\Menu\SoftDrink\SoftDrinkCapacity;

@@ -13,5 +13,11 @@ class PlaceOrder implements WaiterMessageInterface
         public readonly array $order
     )
     {
+        if ($this->tableId === '') {
+            throw new \InvalidArgumentException('$tableId cannot be empty');
+        }
+        if ($this->order === []) {
+            throw new \InvalidArgumentException('$order cannot be empty');
+        }
     }
 }

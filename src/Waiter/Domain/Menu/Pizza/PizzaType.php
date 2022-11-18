@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Waiter\Application\Domain\Menu\Pizza;
+namespace App\Waiter\Domain\Menu\Pizza;
 
 enum PizzaType
 {

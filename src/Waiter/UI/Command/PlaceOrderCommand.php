@@ -2,15 +2,14 @@
 
 namespace App\Waiter\UI\Command;
 
-use App\Waiter\Application\Domain\Menu\Pizza\Pizza;
-use App\Waiter\Application\Domain\Menu\Pizza\PizzaSize;
-use App\Waiter\Application\Domain\Menu\Pizza\PizzaThickness;
-use App\Waiter\Application\Domain\Menu\Pizza\PizzaType;
-use App\Waiter\Application\Domain\Menu\SoftDrink\SoftDrink;
-use App\Waiter\Application\Domain\Menu\SoftDrink\SoftDrinkCapacity;
-use App\Waiter\Application\Domain\Menu\SoftDrink\SoftDrinkType;
 use App\Waiter\Application\Message\Waiter\Command\PlaceOrder;
-use Ramsey\Uuid\Uuid;
+use App\Waiter\Domain\Menu\Pizza\Pizza;
+use App\Waiter\Domain\Menu\Pizza\PizzaSize;
+use App\Waiter\Domain\Menu\Pizza\PizzaThickness;
+use App\Waiter\Domain\Menu\Pizza\PizzaType;
+use App\Waiter\Domain\Menu\SoftDrink\SoftDrink;
+use App\Waiter\Domain\Menu\SoftDrink\SoftDrinkCapacity;
+use App\Waiter\Domain\Menu\SoftDrink\SoftDrinkType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

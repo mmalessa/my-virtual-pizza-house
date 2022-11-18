@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Waiter\Application\Domain\Menu\SoftDrink;
+namespace App\Waiter\Domain\Menu\SoftDrink;
 
-use App\Waiter\Application\Domain\Menu\MenuItem;
+use App\Waiter\Domain\Menu\MenuItem;
 
 class SoftDrink extends MenuItem
 {

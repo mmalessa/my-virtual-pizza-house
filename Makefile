@@ -43,3 +43,8 @@ down: ## Remove the docker containers
 console: ## Enter into application container
 	@docker exec -it -u developer $(CONTAINER_NAME) bash
 
+tests: ## Run tests
+	@./vendor/bin/phpunit --testsuite=all
+
+tests-unit: ## Run tests
+	@./vendor/bin/phpunit --testsuite=unit

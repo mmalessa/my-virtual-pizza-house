@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\OrderManager\Application\Message\Waiter\Event;
 
-use App\Waiter\Application\Message\Waiter\Event\OrderPlaced;
+use App\OrderManager\Application\Message\Waiter\Event\OrderPlaced;
 use PHPUnit\Framework\TestCase;
 
 class OrderPlacedTest extends TestCase

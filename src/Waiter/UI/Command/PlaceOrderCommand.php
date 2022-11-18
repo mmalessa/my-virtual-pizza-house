@@ -20,7 +20,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class PlaceOrderCommand extends Command
 {
     public function __construct(
-        private MessageBusInterface $messageBus
+        private readonly MessageBusInterface $messageBus
     )
     {
         parent::__construct();

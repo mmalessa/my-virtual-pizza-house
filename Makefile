@@ -55,4 +55,4 @@ tests-unit: ## Run tests
 	@./vendor/bin/phpunit --testsuite=unit
 
 tests-coverage: ## Run tests with coverage report
-	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text
+	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text

@@ -8,6 +8,8 @@ services:
         restart: on-failure
         volumes:
             - ../:/app/
+            - ./php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+            - app_home:/home/developer
         working_dir: /app
         tty: true
         networks:
@@ -54,3 +56,4 @@ networks:
 volumes:
     redis_data:
     rabbitmq_mnesia:
+    app_home:

@@ -8,6 +8,7 @@
         "ext-amqp": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ramsey/uuid": "^4.6",
         "symfony/amqp-messenger": "v6.1.7",
         "symfony/console": "v6.1.7",
         "symfony/dotenv": "v6.1.0",

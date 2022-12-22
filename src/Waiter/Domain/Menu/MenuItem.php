@@ -10,9 +10,6 @@ abstract class MenuItem
 {
     public function serialize(): array
     {
-        return array_merge(
-            ['item_type' => (new \ReflectionClass(static::class))->getShortName()],
-            AutoSerializer::serialize($this)
-        );
+        return AutoSerializer::serialize($this);
     }
 }

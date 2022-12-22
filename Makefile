@@ -69,3 +69,11 @@ tests-unit: ## Run tests
 .PHONY: tests-coverage
 tests-coverage: ## Run tests with coverage report
 	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text
+
+.PHONY: tests-mutations
+tests-mutations: ## Run mutation tests
+	@infection
+
+.PHONY: rector
+rector: ##
+	@./vendor/bin/rector process src --dry-run

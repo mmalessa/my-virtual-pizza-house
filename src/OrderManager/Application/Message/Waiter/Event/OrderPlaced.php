@@ -14,18 +14,18 @@ class OrderPlaced implements WaiterMessageInterface
         public readonly string $timestamp
     )
     {
-        if ($this->tableId === '') {
+        if (empty($this->tableId)) {
             throw new \InvalidArgumentException('$tableId cannot be empty');
         }
-        if ($this->order === []) {
+        if (empty($this->order)) {
             throw new \InvalidArgumentException('$order cannot be empty');
         }
-        if ($this->timestamp === '') {
+        if (empty($this->timestamp)) {
             throw new \InvalidArgumentException('$timestamp cannot be empty');
         }
         $dateFormat = 'Y-m-d H:i:s';
         $d = \DateTime::createFromFormat($dateFormat, $this->timestamp);
-        if ($d->format($dateFormat) !== $this->timestamp) {
+        if (strcmp($d->format($dateFormat), $this->timestamp) != 0) {
             throw new \InvalidArgumentException('$timestamp has invalid format');
         }
     }

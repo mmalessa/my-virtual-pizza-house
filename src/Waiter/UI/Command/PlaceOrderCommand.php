@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Waiter\UI\Command;
 
 use App\Waiter\Application\Message\Waiter\Command\PlaceOrder;

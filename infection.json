@@ -12,6 +12,9 @@
     "html": "infection.html"
   },
   "mutators": {
+    "global-ignore": [
+      "*::getHandledMessages"
+    ],
     "@default": true,
     "@arithmetic": true,
     "@boolean": true,

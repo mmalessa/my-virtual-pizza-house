@@ -59,21 +59,21 @@ console-root: ## Enter into application container (as root)
 	@docker exec -it -u root $(CONTAINER_NAME) bash
 
 .PHONY: tests
-tests: ## Run tests
+tests: ## Run tests (phpunit)
 	@./vendor/bin/phpunit --testsuite=all
 
 .PHONY: tests-unit
-tests-unit: ## Run tests
+tests-unit: ## Run tests (phpunit)
 	@./vendor/bin/phpunit --testsuite=unit
 
 .PHONY: tests-coverage
-tests-coverage: ## Run tests with coverage report
+tests-coverage: ## Run tests with console text coverage report (phpunit)
 	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text
 
-.PHONY: tests-mutations
-tests-mutations: ## Run mutation tests
+.PHONY: tests-mutation
+tests-mutation: ## Run mutation tests (infection)
 	@infection
 
 .PHONY: rector
-rector: ##
+rector: ## Run rector refactoring tool (dry-run)
 	@./vendor/bin/rector process src --dry-run

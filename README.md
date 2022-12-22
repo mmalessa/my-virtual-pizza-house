@@ -16,7 +16,7 @@ Inside console
 ```shell
 make tests-unit
 make tests-coverage
-make tests-mutation
+make tests-mutation # see var/infection-logs.html
 ```
 
 ## Tools

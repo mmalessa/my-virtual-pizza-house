@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/infection/infection/0.26.2/resources/schema.json",
+  "source": {
+    "directories": [
+      "src"
+    ],
+    "excludes": [
+      "Kernel.php"
+    ]
+  },
+  "logs": {
+    "html": "infection.html"
+  },
+  "mutators": {
+    "@default": true,
+    "@arithmetic": true,
+    "@boolean": true,
+
+    "@conditional_negotiation": true,
+    "@conditional_boundary": true,
+    "@equal": true,
+
+    "@number": true,
+    "@removal": true
+  },
+  "testFrameworkOptions": "--verbose",
+  "testFramework": "phpunit"
+}

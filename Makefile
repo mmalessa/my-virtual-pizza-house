@@ -1,5 +1,4 @@
 APP_NAME			= my_virtual_pizza_house
-BASE_IMAGE			?= php:8.1.12-cli
 ####
 
 DOCKER_COMPOSE		= docker-compose
@@ -25,12 +24,16 @@ xdebug-setup: ## xdebug gateway setup
 		sed "s/DOCKER_GATEWAY/$(DOCKER_GATEWAY)/g" .docker/php-ini-overrides.ini.dist > .docker/php-ini-overrides.ini; \
 	fi
 
+build: ## Build image
+	@docker build -t $(APP_IMAGE)					\
+	--build-arg DEVELOPER_UID=$(DEVELOPER_UID)		\
+	-f $(DEV_DOCKERFILE) .
+
 up: xdebug-setup ## Start the project docker containers
 	@cd ./.docker && \
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
 	APP_IMAGE=$(APP_IMAGE) \
 	CONTAINER_NAME=$(CONTAINER_NAME) \
-	BASE_IMAGE=$(BASE_IMAGE)			\
 	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) up -d
 
@@ -39,12 +42,14 @@ down: ## Remove the docker containers
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
 	APP_IMAGE=$(APP_IMAGE) \
 	CONTAINER_NAME=$(CONTAINER_NAME) \
-	BASE_IMAGE=$(BASE_IMAGE)			\
 	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) down
 
 console: ## Enter into application container
 	@docker exec -it -u developer $(CONTAINER_NAME) bash
+
+console-root: ## Enter into application container (as root)
+	@docker exec -it -u root $(CONTAINER_NAME) bash
 
 tests: ## Run tests
 	@./vendor/bin/phpunit --testsuite=all

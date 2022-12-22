@@ -9,7 +9,7 @@
     ]
   },
   "logs": {
-    "html": "infection.html"
+    "html": "var/infection-logs.html"
   },
   "mutators": {
     "global-ignore": [

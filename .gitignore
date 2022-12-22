@@ -6,6 +6,5 @@
 
 /phpunit.xml
 .phpunit.result.cache
-/infection.html
 /.idea
 /**/.gitkeep

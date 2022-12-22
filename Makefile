@@ -15,20 +15,24 @@ DOCKER_GATEWAY		?= $(shell if [ 'Linux' = "${PLATFORM}" ]; then ip addr show doc
 ARG := $(word 2, $(MAKECMDGOALS))
 %:
 	@:
+.PHONY: help
 help:
 	@echo -e '\033[1m make [TARGET] \033[0m'
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
+.PHONY: xdebug-setup
 xdebug-setup: ## xdebug gateway setup
 	@if [ "Linux" = "$(PLATFORM)" ]; then \
 		sed "s/DOCKER_GATEWAY/$(DOCKER_GATEWAY)/g" .docker/php-ini-overrides.ini.dist > .docker/php-ini-overrides.ini; \
 	fi
 
+.PHONY: build
 build: ## Build image
 	@docker build -t $(APP_IMAGE)					\
 	--build-arg DEVELOPER_UID=$(DEVELOPER_UID)		\
 	-f $(DEV_DOCKERFILE) .
 
+.PHONY: up
 up: xdebug-setup ## Start the project docker containers
 	@cd ./.docker && \
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
@@ -37,6 +41,7 @@ up: xdebug-setup ## Start the project docker containers
 	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) up -d
 
+.PHONY: down
 down: ## Remove the docker containers
 	@cd ./.docker && \
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
@@ -45,17 +50,22 @@ down: ## Remove the docker containers
 	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) down
 
+.PHONY: console
 console: ## Enter into application container
 	@docker exec -it -u developer $(CONTAINER_NAME) bash
 
+.PHONY: console-root
 console-root: ## Enter into application container (as root)
 	@docker exec -it -u root $(CONTAINER_NAME) bash
 
+.PHONY: tests
 tests: ## Run tests
 	@./vendor/bin/phpunit --testsuite=all
 
+.PHONY: tests-unit
 tests-unit: ## Run tests
 	@./vendor/bin/phpunit --testsuite=unit
 
+.PHONY: tests-coverage
 tests-coverage: ## Run tests with coverage report
 	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text

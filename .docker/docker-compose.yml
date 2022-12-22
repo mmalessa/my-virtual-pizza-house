@@ -4,6 +4,13 @@ services:
 
     app:
         image: ${APP_IMAGE}
+        build:
+            target: dev
+            dockerfile: .docker/Dockerfile
+            context: ..
+            args:
+                BASE_IMAGE: ${BASE_IMAGE}
+                DEVELOPER_UID: ${DEVELOPER_UID}
         container_name: ${CONTAINER_NAME}
         restart: on-failure
         volumes:

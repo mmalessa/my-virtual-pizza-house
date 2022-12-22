@@ -25,17 +25,13 @@ xdebug-setup: ## xdebug gateway setup
 		sed "s/DOCKER_GATEWAY/$(DOCKER_GATEWAY)/g" .docker/php-ini-overrides.ini.dist > .docker/php-ini-overrides.ini; \
 	fi
 
-build: ## Build image
-	@docker build -t $(APP_IMAGE)					\
-	--build-arg BASE_IMAGE=$(BASE_IMAGE)			\
-	--build-arg DEVELOPER_UID=$(DEVELOPER_UID)		\
-	-f $(DEV_DOCKERFILE) .
-
 up: xdebug-setup ## Start the project docker containers
 	@cd ./.docker && \
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
 	APP_IMAGE=$(APP_IMAGE) \
 	CONTAINER_NAME=$(CONTAINER_NAME) \
+	BASE_IMAGE=$(BASE_IMAGE)			\
+	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) up -d
 
 down: ## Remove the docker containers
@@ -43,6 +39,8 @@ down: ## Remove the docker containers
 	COMPOSE_PROJECT_NAME=$(APP_NAME) \
 	APP_IMAGE=$(APP_IMAGE) \
 	CONTAINER_NAME=$(CONTAINER_NAME) \
+	BASE_IMAGE=$(BASE_IMAGE)			\
+	DEVELOPER_UID=$(DEVELOPER_UID)		\
 	$(DOCKER_COMPOSE) down
 
 console: ## Enter into application container

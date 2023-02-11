@@ -18,7 +18,9 @@ class OrderSubscriber implements MessageSubscriberInterface
     {
     }
 
-
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getHandledMessages(): iterable
     {
         yield OrderPlaced::class => ['method' => "onOrderPlaced"];
@@ -30,10 +32,8 @@ class OrderSubscriber implements MessageSubscriberInterface
             $event->tableId,
             $event->timestamp
         ));
-
         // do something more ...and send next command ...if needed ;-)
         $this->logger->info("Here at some point something will happen with the order...");
-
         $this->logger->info(sprintf(
             "I took an order for the table: %s",
             $event->tableId

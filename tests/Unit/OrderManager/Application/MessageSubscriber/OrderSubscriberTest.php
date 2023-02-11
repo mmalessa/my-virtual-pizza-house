@@ -16,7 +16,9 @@ class OrderSubscriberTest extends TestCase
 {
     public function testOnOrderPlaced()
     {
-        $event = new OrderPlaced("T1", [['a' => 'b']], '2022-01-01 01:02:03');
+        $timestamp = '2022-01-01 01:02:03';
+
+        $event = new OrderPlaced("T1", [['a' => 'b']], $timestamp);
         $messageBus = $this->getMockBuilder(MessageBusInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -28,8 +30,10 @@ class OrderSubscriberTest extends TestCase
         $handler = new OrderSubscriber($traceableMessageBus, $logger);
         $handler->onOrderPlaced($event);
 
-        $this->assertTrue($logger->hasRecordThatContains("onOrderPlaced, Table: T1, Timestamp: 2022-01-01 01:02:03", "info"));
-        $this->assertTrue($logger->hasRecordThatContains("onOrderPlaced DONE", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("I'm an Order Manager. I will be taking an order for the table: T1 (timestamp: $timestamp)", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("Here at some point something will happen with the order...", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("I took an order for the table: T1", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("At this point - it's over", "info"));
         $dispatchedMessages = $traceableMessageBus->getDispatchedMessages();
         $this->assertTrue(count($dispatchedMessages) === 0);
     }

@@ -25,7 +25,6 @@ class PlaceOrderHandler implements MessageHandlerInterface
             "Hi table %s, I'm a waiter. I want to accept your order.",
             $command->tableId
         ));
-        sleep(4);
         $timestamp = date("Y-m-d H:i:s");
         $this->messageBus->dispatch(new OrderPlaced(
             $command->tableId,

@@ -31,8 +31,8 @@ class PlaceOrderHandlerTest extends TestCase
         $handler($command);
 
         $dispatchedMessages = $traceableMessageBus->getDispatchedMessages();
-        $this->assertTrue($logger->hasRecordThatContains("PlaceOrderHandler, Table: T1", "info"));
-        $this->assertTrue($logger->hasRecordThatContains("PlaceOrderHandler Done", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("Hi table T1, I'm a waiter. I want to accept your order.", "info"));
+        $this->assertTrue($logger->hasRecordThatContains("Thank you table T1. I took the order.", "info"));
         $this->assertTrue(count($dispatchedMessages) === 1);
         $dispatchedMessage = $dispatchedMessages[0]['message'];
         $this->assertTrue($dispatchedMessage::class === OrderPlaced::class);

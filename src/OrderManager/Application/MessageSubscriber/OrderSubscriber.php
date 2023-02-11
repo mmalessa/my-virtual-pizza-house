@@ -30,17 +30,14 @@ class OrderSubscriber implements MessageSubscriberInterface
             $event->tableId,
             $event->timestamp
         ));
-        sleep(1);
+
         // do something more ...and send next command ...if needed ;-)
         $this->logger->info("Here at some point something will happen with the order...");
-        sleep(4);
 
         $this->logger->info(sprintf(
-            "I took an order for the table: %s (timestamp: %s)",
-            $event->tableId,
-            $event->timestamp
+            "I took an order for the table: %s",
+            $event->tableId
         ));
-
         $this->logger->info("At this point - it's over");
     }
 }

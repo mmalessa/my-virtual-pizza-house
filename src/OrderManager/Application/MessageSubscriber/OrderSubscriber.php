@@ -26,13 +26,21 @@ class OrderSubscriber implements MessageSubscriberInterface
 
     public function onOrderPlaced(OrderPlaced $event) {
         $this->logger->info(sprintf(
-            "onOrderPlaced, Table: %s, Timestamp: %s",
+            "I'm an Order Manager. I will be taking an order for the table: %s (timestamp: %s)",
+            $event->tableId,
+            $event->timestamp
+        ));
+        sleep(1);
+        // do something more ...and send next command ...if needed ;-)
+        $this->logger->info("Here at some point something will happen with the order...");
+        sleep(4);
+
+        $this->logger->info(sprintf(
+            "I took an order for the table: %s (timestamp: %s)",
             $event->tableId,
             $event->timestamp
         ));
 
-        // do something more ...and send next command ...if needed ;-)
-
-        $this->logger->info("onOrderPlaced DONE");
+        $this->logger->info("At this point - it's over");
     }
 }

@@ -22,16 +22,19 @@ class PlaceOrderHandler implements MessageHandlerInterface
     public function __invoke(PlaceOrder $command)
     {
         $this->logger->info(sprintf(
-            "PlaceOrderHandler, Table: %s)",
+            "Hi table %s, I'm a waiter. I want to accept your order.",
             $command->tableId
         ));
-
+        sleep(4);
         $timestamp = date("Y-m-d H:i:s");
         $this->messageBus->dispatch(new OrderPlaced(
             $command->tableId,
             $command->order,
             $timestamp
         ));
-        $this->logger->info("PlaceOrderHandler Done");
+        $this->logger->info(sprintf(
+            "Thank you table %s. I took the order.",
+            $command->tableId
+        ));
     }
 }

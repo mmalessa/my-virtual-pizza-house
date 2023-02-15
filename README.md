@@ -12,6 +12,7 @@ composer install
 ```
 
 ## Start the machinery
+### Option 1
 ```shell
 # inside 1th docker console
 ./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
@@ -20,6 +21,21 @@ composer install
 ./bin/console app:waiter:start TBL1
 ```
 Nothing spectacular, but... it works!
+
+### Option 2
+```shell
+# inside 1th docker console
+./bin/console messenger:consume order_manager_transport
+# inside 2nd docker console
+./bin/console messenger:consume menu_transport
+# inside 3rd docker console
+./bin/console messenger:consume waiter_transport
+# inside 4th docker console
+./bin/console messenger:consume kitchen_transport
+
+# inside 5nd docker console
+./bin/console app:waiter:start TableId
+```
 
 You can watch RabbitMQ queues: http://localhost:1567 (user/user)
 

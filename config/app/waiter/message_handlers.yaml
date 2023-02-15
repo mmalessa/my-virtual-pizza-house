@@ -6,3 +6,4 @@ services:
         bind:
             $messageBus: '@waiter.message.bus'
             $logger: '@monolog.logger.waiter'
+            $communicator: '@App\Waiter\Domain\CommunicatorInterface'

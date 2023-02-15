@@ -14,13 +14,10 @@ composer install
 ## Start the machinery
 ```shell
 # inside 1th docker console
-./bin/console messenger:consume order_manager_transport
+./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
 
 # inside 2nd docker console
-./bin/console messenger:consume waiter_transport
-
-# inside 3rd docker console
-./bin/console app:waiter:place-order
+./bin/console app:waiter:start TBL1
 ```
 Nothing spectacular, but... it works!
 
@@ -33,6 +30,7 @@ make tests-unit
 make tests-coverage
 make tests-mutation # see var/infection-logs.html
 ```
+...I know there's still a lot to do here ;)
 
 ## Tools
 Inside console

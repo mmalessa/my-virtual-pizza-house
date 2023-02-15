@@ -10,35 +10,33 @@ use PHPUnit\Framework\TestCase;
 class OrderPlacedTest extends TestCase
 {
     /** @dataProvider provideValidData */
-    public function testOrderPlaced(string $tableId, array $order, string $timestamp)
+    public function testOrderPlaced(string $sagaId, array $orderList)
     {
-        $placeOrder = new OrderPlaced($tableId, $order, $timestamp);
-        $this->assertEquals($tableId, $placeOrder->tableId);
-        $this->assertEquals($order, $placeOrder->order);
+        $placeOrder = new OrderPlaced($sagaId, $orderList);
+        $this->assertEquals($sagaId, $placeOrder->sagaId);
+        $this->assertEquals($orderList, $placeOrder->orderList);
     }
 
     private function provideValidData(): array
     {
         return [
-            ['Table001', [['a' => 'b', 'c' => 'd']], '2022-01-01 10:11:12'],
-            ['Something', [['a' => 'b']], '2023-12-31 01:02:03'],
+            ['b3816513-6108-4b2c-a7f3-c3ad6f11bb02', [['a' => 'b', 'c' => 'd']]],
+            ['Something', [['a' => 'b']]],
         ];
     }
 
     /** @dataProvider provideInvalidData */
-    public function testOrderPlacedError(string $tableId, array $order, string $timestamp)
+    public function testOrderPlacedError(string $sagaId, array $orderList)
     {
         $this->expectException(\InvalidArgumentException::class);
-        new OrderPlaced($tableId, $order, $timestamp);
+        new OrderPlaced($sagaId, $orderList);
     }
 
     private function provideInvalidData(): array
     {
         return [
-            ['', [['a' => 'b']], '2022-01-01 10:11:12'],
-            ['x', [], '2022-01-01 01:02:03'],
-            ['bbbbb', [['a' => 'b']], ''],
-            ['bbbbb', [['a' => 'b']], '2022-02-31 01:01:01'],
+            ['', [['a' => 'b']]],
+            ['x', []],
         ];
     }
 }

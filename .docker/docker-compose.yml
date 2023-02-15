@@ -9,7 +9,6 @@ services:
             dockerfile: .docker/Dockerfile
             context: ..
             args:
-                BASE_IMAGE: ${BASE_IMAGE}
                 DEVELOPER_UID: ${DEVELOPER_UID}
         container_name: ${CONTAINER_NAME}
         restart: on-failure
@@ -34,7 +33,6 @@ services:
         environment:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
-
 
     dev-redis:
         image: redis:7.0.5

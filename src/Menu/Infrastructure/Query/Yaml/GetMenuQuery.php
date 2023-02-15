@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 class GetMenuQuery implements GetMenuQueryInterface
 {
     public function __construct(
-        private string $menuYamlFile
+        private readonly string $menuYamlFile
     )
     {
     }

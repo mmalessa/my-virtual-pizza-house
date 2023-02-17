@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\TraceableMessageBus;
 
-class DoPizzaHandlerTest extends TestCase
+class GetMenuHandlerTest extends TestCase
 {
     public function testHandler()
     {
@@ -41,5 +41,8 @@ class DoPizzaHandlerTest extends TestCase
         $this->assertTrue(count($dispatchedMessages) === 1);
         $dispatchedMessage = $dispatchedMessages[0]['message'];
         $this->assertTrue($dispatchedMessage::class === MenuGot::class);
+
+        $logger->hasRecordThatContains("[c3b9b891-ba30-40cd-b584-5a32b9184b05] GetMenu received", "info");
+        $logger->hasRecordThatContains("[c3b9b891-ba30-40cd-b584-5a32b9184b05] GotMenu dispatched (3 items)", "info");
     }
 }

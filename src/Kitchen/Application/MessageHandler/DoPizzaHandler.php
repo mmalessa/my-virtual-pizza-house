@@ -31,17 +31,6 @@ class DoPizzaHandler implements MessageHandlerInterface
             $command->pizzaSize
         ));
 
-        if (false) {
-            $randomTime = random_int(2, 6);
-            $this->logger->info(sprintf(
-                "[%s:%s] The pizza is being prepared (%ds)",
-                $sagaId,
-                $kitchenOrderId,
-                $randomTime
-            ));
-            sleep($randomTime);
-        }
-
         $this->logger->info(sprintf(
             "[%s:%s] The pizza is done",
             $sagaId,

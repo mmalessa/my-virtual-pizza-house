@@ -20,7 +20,7 @@ class PizzaDoneTest extends TestCase
     private function provideValidData(): array
     {
         return [
-            ['sagaId', 'kitchenOrderId'],
+            ['64821cee-659f-485d-9bf3-fd8bab722cda', '8333b390-b7e8-468a-a0a9-d71a1aff3982'],
         ];
     }
 

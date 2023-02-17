@@ -22,8 +22,8 @@ class DoPizzaTest extends TestCase
     private function provideValidData(): array
     {
         return [
-            ['sagaId', 'kitchenOrderId', 'pamat', 'xl'],
-            ['sagaId', 'kitchenOrderId', 'pamat', 'xxl'],
+            ['8ed543d7-a6ad-4746-8c11-7b27437c0d38', 'b984b3bf-8c9a-49b5-97d2-6702e12dee3c', 'pamat', 'xl'],
+            ['c9c18f74-4f08-4cd4-bdaa-702bdc5594b9', '64821cee-659f-485d-9bf3-fd8bab722cda', 'pamat', 'xxl'],
         ];
     }
 
@@ -38,9 +38,9 @@ class DoPizzaTest extends TestCase
     {
         return [
             ['', 'kitchenOrderId', 'pamat', 'xl'],
-            ['sagaId', '', 'pamat', 'xxl'],
-            ['sagaId', 'kitchenOrderId', '', 'xxl'],
-            ['sagaId', 'kitchenOrderId', 'pamat', ''],
+            ['c9c18f74-4f08-4cd4-bdaa-702bdc5594b9', '', 'pamat', 'xxl'],
+            ['64821cee-659f-485d-9bf3-fd8bab722cda', 'kitchenOrderId', '', 'xxl'],
+            ['b984b3bf-8c9a-49b5-97d2-6702e12dee3c', 'b984b3bf-8c9a-49b5-97d2-6702e12dee3c', 'pamat', ''],
         ];
     }
 }

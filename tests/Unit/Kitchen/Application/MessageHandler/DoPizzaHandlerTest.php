@@ -17,8 +17,8 @@ class DoPizzaHandlerTest extends TestCase
 {
     public function testHandler()
     {
-        $sagaId = 'SagaId';
-        $kitchenOrderId = 'KitchenOrderId';
+        $sagaId = 'c3b9b891-ba30-40cd-b584-5a32b9184b05';
+        $kitchenOrderId = '8333b390-b7e8-468a-a0a9-d71a1aff3982';
         $pizzaId = 'PizzaId';
         $pizzaSize = 'PizzaSize';
 

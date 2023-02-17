@@ -21,7 +21,7 @@ class OrderPlacedTest extends TestCase
     {
         return [
             ['b3816513-6108-4b2c-a7f3-c3ad6f11bb02', [['a' => 'b', 'c' => 'd']]],
-            ['Something', [['a' => 'b']]],
+            ['c3b9b891-ba30-40cd-b584-5a32b9184b05', [['a' => 'b']]],
         ];
     }
 

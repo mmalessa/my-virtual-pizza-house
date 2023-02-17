@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\OrderManager\Application\Message\Kitchen\Command;
 
 use App\OrderManager\Application\Message\OrderManagerMessageInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Ramsey\Uuid\Uuid;
 
 readonly class DoPizza implements OrderManagerMessageInterface
 {
@@ -16,11 +16,11 @@ readonly class DoPizza implements OrderManagerMessageInterface
         public string $pizzaSize
     )
     {
-        if (empty($this->sagaId)) {
-            throw new \InvalidArgumentException("TableId cannot be empty");
+        if (empty($this->sagaId) || !Uuid::isValid($this->sagaId)) {
+            throw new \InvalidArgumentException("SagaId cannot be empty and must be UUID(v4)");
         }
-        if (empty($this->kitchenOrderId)) {
-            throw new \InvalidArgumentException("KitchenOrderId cannot be empty");
+        if (empty($this->kitchenOrderId) || !Uuid::isValid($this->kitchenOrderId)) {
+            throw new \InvalidArgumentException("KitchenOrderId cannot be empty and must be UUID(v4)");
         }
         if (empty($this->pizzaId)) {
             throw new \InvalidArgumentException("PizzaId cannot be empty");

@@ -20,8 +20,8 @@ class ShowMenuTest extends TestCase
     private function provideValidData(): array
     {
         return [
-            ['sagaId', []],
-            ['sagaId', ['some', 'array']]
+            ['64821cee-659f-485d-9bf3-fd8bab722cda', []],
+            ['64821cee-659f-485d-9bf3-fd8bab722cda', ['some', 'array']]
         ];
     }
 

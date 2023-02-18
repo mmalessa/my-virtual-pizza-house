@@ -7,4 +7,5 @@ namespace App\Waiter\Domain;
 interface CommunicatorInterface
 {
     public function showMenu(array $menu);
+    public function infoAboutServedPizzas(array $info);
 }

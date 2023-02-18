@@ -27,7 +27,7 @@ class DoPizzaHandler implements MessageHandlerInterface
             "[%s:%s] DoPizza: %s(%s)",
             $sagaId,
             $kitchenOrderId,
-            $command->pizzaId,
+            $command->menuId,
             $command->pizzaSize
         ));
 

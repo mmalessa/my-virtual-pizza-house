@@ -29,4 +29,12 @@ class Communicator implements CommunicatorInterface
         }
         return $info;
     }
+
+    public function infoAboutServedPizzas(array $pizzas) {
+        echo "------- I am happy to serve all pizzas --------\n";
+        foreach ($pizzas as $pizza) {
+            printf("(%s) %s %s\n", $pizza['menuId'], $pizza['name'], $pizza['pizzaSize']);
+        }
+        echo "-----------------------------------------------\n";
+    }
 }

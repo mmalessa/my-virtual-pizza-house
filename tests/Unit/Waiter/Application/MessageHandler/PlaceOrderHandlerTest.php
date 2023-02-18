@@ -38,7 +38,9 @@ class PlaceOrderHandlerTest extends TestCase
         $logger = new TestLogger();
 
         $handler = new PlaceOrderHandler($traceableMessageBus, $logger);
+        ob_start();
         $handler($placeOrder);
+        ob_end_clean();
 
         $dispatchedMessages = $traceableMessageBus->getDispatchedMessages();
         $this->assertTrue(count($dispatchedMessages) === 1);

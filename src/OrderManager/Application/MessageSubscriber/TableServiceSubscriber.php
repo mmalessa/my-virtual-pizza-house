@@ -8,9 +8,13 @@ use App\OrderManager\Application\Message\Kitchen\Command\DoPizza;
 use App\OrderManager\Application\Message\Kitchen\Event\PizzaDone;
 use App\OrderManager\Application\Message\Menu\Command\GetMenu;
 use App\OrderManager\Application\Message\Menu\Event\MenuGot;
+use App\OrderManager\Application\Message\Waiter\Command\PlaceOrder;
 use App\OrderManager\Application\Message\Waiter\Command\ShowMenu;
+use App\OrderManager\Application\Message\Waiter\Event\MenuShown;
 use App\OrderManager\Application\Message\Waiter\Event\OrderPlaced;
 use App\OrderManager\Application\Message\Waiter\Event\TableServiceStarted;
+use App\OrderManager\Domain\TableService;
+use App\OrderManager\Domain\TableServiceRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
@@ -20,7 +24,8 @@ class TableServiceSubscriber implements MessageSubscriberInterface
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly TableServiceRepositoryInterface $tableServiceRepository
     )
     {
     }
@@ -32,6 +37,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
     {
         yield TableServiceStarted::class => ['method' => 'onTableServiceStarted'];
         yield MenuGot::class => ['method' => 'onMenuGot'];
+        yield MenuShown::class => ['method' => 'onMenuShown'];
         yield OrderPlaced::class => ['method' => 'onOrderPlaced'];
         yield PizzaDone::class => ['method' => 'onPizzaDone'];
     }
@@ -39,10 +45,13 @@ class TableServiceSubscriber implements MessageSubscriberInterface
     public function onTableServiceStarted(TableServiceStarted $event)
     {
         $sagaId = Uuid::uuid4()->toString();
-        //TODO persist TableService($sagaId)
+        $tableId = $event->tableId;
+
+        $tableService = new TableService($sagaId, $tableId);
+        $this->tableServiceRepository->save($tableService);
 
         $this->logger->info(sprintf(
-            "[%s] TableServiceStarted (tableId: %s, sagaId: %s)",
+            "[%s] onTableServiceStarted (tableId: %s, sagaId: %s)",
             $sagaId,
             $event->tableId,
             $sagaId
@@ -52,12 +61,39 @@ class TableServiceSubscriber implements MessageSubscriberInterface
 
     public function onMenuGot(MenuGot $event)
     {
+        $sagaId = $event->sagaId;
+        $tableService = $this->tableServiceRepository->get($sagaId);
         $this->logger->info(sprintf(
-            "[%s] MenuGot",
-            $event->sagaId
+            "[%s] onMenuGot",
+            $sagaId
         ));
-        $this->messageBus->dispatch(new ShowMenu($event->sagaId, $event->menu));
+
+        // Decision based on the state of the saga
+        if ($tableService->canShowMenu()) {
+            $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
+            $this->messageBus->dispatch(new ShowMenu($event->sagaId, $event->menu));
+        } else {
+            $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $sagaId));
+            $this->messageBus->dispatch(new PlaceOrder($sagaId));
+        }
+
     }
+
+    public function onMenuShown(MenuShown $event)
+    {
+        $sagaId = $event->sagaId;
+
+        $this->logger->info(sprintf(
+            "[%s] onMenuShown",
+            $sagaId
+        ));
+
+        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService->menuWasShown();
+        $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
+        $this->messageBus->dispatch(new PlaceOrder($sagaId));
+    }
+
 
     public function onOrderPlaced(OrderPlaced $event)
     {
@@ -65,16 +101,18 @@ class TableServiceSubscriber implements MessageSubscriberInterface
         $orderList = $event->orderList;
 
         $this->logger->info(sprintf(
-            "[%s] OrderPlaced",
+            "[%s] onOrderPlaced",
             $sagaId
         ));
+
+        $tableService = $this->tableServiceRepository->get($sagaId);
 
         foreach ($orderList as $order) {
             for ($q=1; $q<=$order['quantity']; $q++) {
                 $kitchenOrderId = Uuid::uuid4()->toString();
-                //TODO -> persist $kitchenOrderId
+                $tableService->addKitchenOrder($kitchenOrderId);
                 $this->logger->info(sprintf(
-                    "[%s:%s] DoPizza %s(%s)",
+                    "[%s:%s] Dispatch->DoPizza %s(%s)",
                     $sagaId,
                     $kitchenOrderId,
                     $order['id'],
@@ -90,15 +128,19 @@ class TableServiceSubscriber implements MessageSubscriberInterface
         $sagaId = $event->sagaId;
         $kitchenOrderId = $event->kitchenOrderId;
 
+        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService->kitchenOrderDone($kitchenOrderId);
         $this->logger->info(sprintf(
-            "[%s:%s] Pizza Done",
+            "[%s:%s] onPizza Done",
             $sagaId,
             $kitchenOrderId
         ));
 
-        //TODO - check if all pizzas done
-        //TODO - if all done -> dispatch ServePizzas()
-
+        if ($tableService->allOrdersDone()) {
+            $this->logger->info(sprintf("[%s] All Pizzas done! All pizzas can be served!", $sagaId));
+//            //TODO - dispatch Waiter->ServePizzas()
+        } else {
+            $this->logger->info(sprintf("[%s] Not all pizzas ready. We are waiting.", $sagaId));
+        }
     }
-
 }

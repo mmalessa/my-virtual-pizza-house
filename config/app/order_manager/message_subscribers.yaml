@@ -6,3 +6,4 @@ services:
         bind:
             $messageBus: '@order_manager.message.bus'
             $logger: '@monolog.logger.order_manager'
+            $tableServiceRepository: '@App\OrderManager\Domain\TableServiceRepositoryInterface'

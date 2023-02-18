@@ -31,7 +31,7 @@ class GetMenuHandler implements MessageHandlerInterface
         $menu = $this->getMenuQuery->getMenu();
         $this->messageBus->dispatch(new MenuGot($sagaId, $menu));
         $this->logger->info(sprintf(
-            "[%s] GotMenu dispatched (%d items)",
+            "[%s] MenuGot dispatched (%d items)",
             $sagaId,
             count($menu)
         ));

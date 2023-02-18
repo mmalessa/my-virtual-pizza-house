@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Waiter\Application\MessageHandler;
 
 use App\Waiter\Application\Message\Waiter\Command\ShowMenu;
+use App\Waiter\Application\Message\Waiter\Event\MenuShown;
 use App\Waiter\Application\Message\Waiter\Event\OrderPlaced;
 use App\Waiter\Domain\CommunicatorInterface;
 use Psr\Log\LoggerInterface;
@@ -29,30 +30,9 @@ class ShowMenuHandler implements MessageHandlerInterface
             $sagaId
         ));
         $this->communicator->showMenu($command->menu);
-        $this->logger->info(sprintf(
-            "[%s] This is where communication with the client should take place",
-            $sagaId
-        ));
-        $orderList = [
-            [ 'id' => 'pmghr', 'size' => 'xl', 'quantity' => '2' ],
-            [ 'id' => 'proma', 'size' => 'xl', 'quantity' => '1' ],
-            [ 'id' => 'pamat', 'size' => 'xxl', 'quantity' => '2' ],
-        ];
-        $this->logger->info(sprintf(
-            "[%s] Let's simplify it. A customer orders: %s",
-            $sagaId,
-            $this->getNiceOrder($orderList)
-        ));
-        $this->messageBus->dispatch(new OrderPlaced($sagaId, $orderList));
+
+        $this->messageBus->dispatch(new MenuShown($sagaId));
     }
 
-    private function getNiceOrder(array $orderList): string
-    {
-        $niceItems = [];
-        foreach ($orderList as $item) {
-            $niceItems[] = sprintf("%s(%s) x %s", $item['id'], $item['size'], $item['quantity']);
-        }
-        return implode(", ", $niceItems);
-    }
 
 }

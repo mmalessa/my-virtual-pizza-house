@@ -1,0 +1,6 @@
+services:
+
+    App\OrderManager\Domain\TableServiceRepositoryInterface:
+        alias: App\OrderManager\Infrastructure\Repository\InMemory\TableServiceRepository
+
+    App\OrderManager\Infrastructure\Repository\InMemory\TableServiceRepository:

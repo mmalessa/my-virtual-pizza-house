@@ -11,14 +11,12 @@ class TableService
     private bool $menuWasShownStatus;
     private array $menuShownCustomer;
 
-    private array $orderList;
     public function __construct(public readonly string $sagaId)
     {
         $this->status = TableServiceStatus::Started;
         $this->kitchenOrders = [];
         $this->menuWasShownStatus = false;
         $this->menuShownCustomer = [];
-        $this->orderList = [];
     }
 
     public function thisMenuWasShownToCustomer(array $menuShownCustomer)

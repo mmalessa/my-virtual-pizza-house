@@ -10,6 +10,8 @@ class TableService
     private array $kitchenOrders;
     private bool $menuWasShownStatus;
     private array $menuShownCustomer;
+
+    private array $orderList;
     public function __construct(public readonly string $sagaId)
     {
         $this->status = TableServiceStatus::Started;

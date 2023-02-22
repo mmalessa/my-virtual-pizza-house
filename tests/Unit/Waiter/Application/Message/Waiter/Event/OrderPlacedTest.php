@@ -17,7 +17,7 @@ class OrderPlacedTest extends TestCase
         $this->assertEquals($orderList, $placeOrder->orderList);
     }
 
-    private function provideValidData(): array
+    public static function provideValidData(): array
     {
         return [
             ['b3816513-6108-4b2c-a7f3-c3ad6f11bb02', [['a' => 'b', 'c' => 'd']]],
@@ -32,7 +32,7 @@ class OrderPlacedTest extends TestCase
         new OrderPlaced($sagaId, $orderList);
     }
 
-    private function provideInvalidData(): array
+    public static function provideInvalidData(): array
     {
         return [
             ['', [['a' => 'b']]],

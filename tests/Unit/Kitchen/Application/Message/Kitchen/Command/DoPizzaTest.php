@@ -19,7 +19,7 @@ class DoPizzaTest extends TestCase
         $this->assertEquals($pizzaSize, $doPizza->pizzaSize);
     }
 
-    private function provideValidData(): array
+    public static function provideValidData(): array
     {
         return [
             ['8ed543d7-a6ad-4746-8c11-7b27437c0d38', 'b984b3bf-8c9a-49b5-97d2-6702e12dee3c', 'pamat', 'xl'],
@@ -34,7 +34,7 @@ class DoPizzaTest extends TestCase
         new DoPizza($sagaId, $kitchenOrderId, $pizzaId, $pizzaSize);
     }
 
-    private function provideInvalidData(): array
+    public static function provideInvalidData(): array
     {
         return [
             ['', 'kitchenOrderId', 'pamat', 'xl'],

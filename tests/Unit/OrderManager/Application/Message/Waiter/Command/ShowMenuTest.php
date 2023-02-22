@@ -17,7 +17,7 @@ class ShowMenuTest extends TestCase
         $this->assertEquals($menu, $showMenu->menu);
     }
 
-    private function provideValidData(): array
+    public static function provideValidData(): array
     {
         return [
             ['c3b9b891-ba30-40cd-b584-5a32b9184b05', []],
@@ -32,7 +32,7 @@ class ShowMenuTest extends TestCase
         new ShowMenu($sagaId, $menu);
     }
 
-    private function provideInvalidData(): array
+    public static function provideInvalidData(): array
     {
         return [
             ['', []],

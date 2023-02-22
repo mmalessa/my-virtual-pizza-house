@@ -17,7 +17,7 @@ class PizzaDoneTest extends TestCase
         $this->assertEquals($kitchenOrderId, $pizzaDone->kitchenOrderId);
     }
 
-    private function provideValidData(): array
+    public static function provideValidData(): array
     {
         return [
             ['64821cee-659f-485d-9bf3-fd8bab722cda', '8333b390-b7e8-468a-a0a9-d71a1aff3982'],
@@ -31,7 +31,7 @@ class PizzaDoneTest extends TestCase
         new PizzaDone($sagaId, $kitchenOrderId);
     }
 
-    private function provideInvalidData(): array
+    public static function provideInvalidData(): array
     {
         return [
             ['', 'kitchenOrderId'],

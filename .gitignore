@@ -5,6 +5,7 @@
 /vendor/
 
 /phpunit.xml
-.phpunit.result.cache
+/.phpunit.result.cache
+/.phpunit.cache/
 /.idea
 /**/.gitkeep

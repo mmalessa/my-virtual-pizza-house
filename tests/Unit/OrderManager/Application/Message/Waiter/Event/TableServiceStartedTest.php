@@ -16,7 +16,7 @@ class TableServiceStartedTest extends TestCase
         $this->assertEquals($tableId, $tableServiceStarted->tableId);
     }
 
-    private function provideValidData(): array
+    public static function provideValidData(): array
     {
         return [
             ['T1'],
@@ -31,7 +31,7 @@ class TableServiceStartedTest extends TestCase
         new TableServiceStarted($tableId);
     }
 
-    private function provideInvalidData(): array
+    public static function provideInvalidData(): array
     {
         return [
           ['']

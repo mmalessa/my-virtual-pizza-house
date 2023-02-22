@@ -80,7 +80,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
             $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $sagaId));
             $this->messageBus->dispatch(new PlaceOrder($sagaId));
         }
-
+        $this->tableServiceRepository->save($tableService);
     }
 
     public function onMenuShown(MenuShown $event)
@@ -96,6 +96,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
         $tableService->menuWasShown();
         $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
         $this->messageBus->dispatch(new PlaceOrder($sagaId));
+        $this->tableServiceRepository->save($tableService);
     }
 
 
@@ -127,6 +128,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
                 $this->messageBus->dispatch(new DoPizza($sagaId, $kitchenOrderId, $order['id'], $order['size']));
             }
         }
+        $this->tableServiceRepository->save($tableService);
     }
 
     public function onPizzaDone(PizzaDone $event)
@@ -149,6 +151,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
         } else {
             $this->logger->info(sprintf("[%s] Not all pizzas ready. We are waiting.", $sagaId));
         }
+        $this->tableServiceRepository->save($tableService);
     }
 
     public function onPizzasServed(PizzasServed $event)

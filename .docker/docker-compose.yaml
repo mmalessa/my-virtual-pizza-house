@@ -22,7 +22,7 @@ services:
             devapp:
 
     dev-rabbitmq:
-        image: rabbitmq:3.11.2-management
+        image: rabbitmq:3.11.9-management
         container_name: dev-rabbitmq
         restart: on-failure
         ports: [ 5672:5672, 15672:15672 ]

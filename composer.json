@@ -8,6 +8,7 @@
         "ext-amqp": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "predis/predis": "v2.1.1",
         "ramsey/uuid": "4.7.3",
         "symfony/amqp-messenger": "v6.2.5",
         "symfony/console": "v6.2.5",

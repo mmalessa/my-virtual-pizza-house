@@ -37,4 +37,26 @@ class Communicator implements CommunicatorInterface
         }
         echo "-----------------------------------------------\n";
     }
+
+    public function showBill(array $bill)
+    {
+        echo "------- Please accept the bill --------\n";
+        $items = $bill['items'];
+        foreach ($items as $item) {
+            printf(
+                "(%s) %-25s %-4s    %d %s\n",
+                $item['menuId'],
+                $item['name'],
+                $item['pizzaSize'],
+                $item['price'],
+                $item['currency']
+            );
+        }
+        $sum = $bill['sum'];
+        echo "SUM:\n";
+        foreach ($sum as $currency=>$price) {
+            printf("    %d %s\n", $price, $currency);
+        }
+        echo "----------------------------------------\n";
+    }
 }

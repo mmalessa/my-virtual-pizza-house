@@ -8,9 +8,12 @@ use App\OrderManager\Application\Message\Kitchen\Command\DoPizza;
 use App\OrderManager\Application\Message\Kitchen\Event\PizzaDone;
 use App\OrderManager\Application\Message\Menu\Command\GetMenu;
 use App\OrderManager\Application\Message\Menu\Event\MenuGot;
+use App\OrderManager\Application\Message\Waiter\Command\ShowBill;
 use App\OrderManager\Application\Message\Waiter\Command\PlaceOrder;
 use App\OrderManager\Application\Message\Waiter\Command\ServePizzas;
 use App\OrderManager\Application\Message\Waiter\Command\ShowMenu;
+use App\OrderManager\Application\Message\Waiter\Command\ThankClient;
+use App\OrderManager\Application\Message\Waiter\Event\BillPaid;
 use App\OrderManager\Application\Message\Waiter\Event\MenuShown;
 use App\OrderManager\Application\Message\Waiter\Event\OrderPlaced;
 use App\OrderManager\Application\Message\Waiter\Event\PizzasServed;
@@ -21,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class TableServiceSubscriber implements MessageSubscriberInterface
 {
@@ -43,6 +47,7 @@ class TableServiceSubscriber implements MessageSubscriberInterface
         yield OrderPlaced::class => ['method' => 'onOrderPlaced'];
         yield PizzaDone::class => ['method' => 'onPizzaDone'];
         yield PizzasServed::class => ['method' => 'onPizzasServed'];
+        yield BillPaid::class => ['method' => 'onBillPaid'];
     }
 
     public function onTableServiceStarted(TableServiceStarted $event)
@@ -158,7 +163,26 @@ class TableServiceSubscriber implements MessageSubscriberInterface
     {
         $sagaId = $event->sagaId;
         $this->logger->info(sprintf("[%s] onPizzasServed", $sagaId));
-        $this->logger->info("To be continued soon...");
-        //TODO - do more
+
+        $tableService = $this->tableServiceRepository->get($sagaId);
+        $bill = $tableService->getBill();
+        $delayMs = 2000;
+        $this->logger->info(sprintf(
+            "[%s] Dispatch->ShowBill with delay %d ms",
+            $sagaId,
+            $delayMs
+        ));
+        $this->messageBus->dispatch(new ShowBill($sagaId, $bill), [new DelayStamp($delayMs)]);
+    }
+
+    public function onBillPaid(BillPaid $event)
+    {
+        $sagaId = $event->sagaId;
+        $this->logger->info(sprintf("[%s] onBillPaid", $sagaId));
+        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService->finishService();
+        $this->tableServiceRepository->save($tableService);
+        $this->logger->info(sprintf("[%s] Dispatch->ThankClient", $sagaId));
+        $this->messageBus->dispatch(new ThankClient($sagaId));
     }
 }

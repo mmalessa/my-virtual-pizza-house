@@ -19,6 +19,11 @@ class TableService
         $this->menuShownCustomer = [];
     }
 
+    public function finishService()
+    {
+        $this->status = TableServiceStatus::Ended;
+    }
+
     public function thisMenuWasShownToCustomer(array $menuShownCustomer)
     {
         $this->menuShownCustomer = $menuShownCustomer;
@@ -72,6 +77,35 @@ class TableService
             ];
         }
         return $pizzasToServe;
+    }
+
+    public function getBill(): array
+    {
+        if (!$this->allOrdersDone()) {
+            return [];
+        }
+        $bill = [
+            "sum" => [],
+            "items" => [],
+        ];
+        foreach ($this->kitchenOrders as $kitchenOrderId=>$kitchenOrder){
+            $menuId = $kitchenOrder['menuId'];
+            $pizzaSize = $kitchenOrder['pizzaSize'];
+            $price = $this->menuShownCustomer[$menuId]['size'][$pizzaSize]['price'];
+            $currency = $this->menuShownCustomer[$menuId]['size'][$pizzaSize]['currency'];
+            $bill['items'][$kitchenOrderId] = [
+                'menuId' => $menuId,
+                'name' => $this->menuShownCustomer[$menuId]['name'],
+                'pizzaSize' => $pizzaSize,
+                'price' => $price,
+                'currency' => $currency,
+            ];
+            $bill['sum'][$currency] = match (array_key_exists($currency,$bill['sum'])) {
+                true => $bill['sum'][$currency] + $price,
+                false => $price,
+            };
+        }
+        return $bill;
     }
 
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Waiter\Application\MessageHandler;
 
-use App\Waiter\Application\Message\Waiter\Command\ShowMenu;
-use App\Waiter\Application\Message\Waiter\Event\MenuShown;
+use App\Waiter\Application\Message\Waiter\Command\ShowBill;
+use App\Waiter\Application\Message\Waiter\Event\BillPaid;
 use App\Waiter\Domain\CommunicatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class ShowMenuHandler implements MessageHandlerInterface
+class ShowBillHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -21,17 +21,18 @@ class ShowMenuHandler implements MessageHandlerInterface
     {
     }
 
-    public function __invoke(ShowMenu $command)
+    public function __invoke(ShowBill $command)
     {
         $sagaId = $command->sagaId;
         $this->logger->info(sprintf(
-            "[%s] ShowMenu",
+            "[%s] ShowBill",
             $sagaId
         ));
-        $this->communicator->showMenu($command->menu);
-
-        $this->messageBus->dispatch(new MenuShown($sagaId));
+        $this->communicator->showBill($command->bill);
+        $this->logger->info(sprintf(
+            "[%s] This is where communication with the client should pay. Let's simplify it.",
+            $sagaId
+        ));
+        $this->messageBus->dispatch(new BillPaid($sagaId, $command->bill['sum']));
     }
-
-
 }

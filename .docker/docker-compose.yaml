@@ -11,6 +11,9 @@ services:
             args:
                 DEVELOPER_UID: ${DEVELOPER_UID}
         container_name: ${CONTAINER_NAME}
+        depends_on:
+            - dev-rabbitmq
+            - dev-redis
         restart: on-failure
         volumes:
             - ../:/app/

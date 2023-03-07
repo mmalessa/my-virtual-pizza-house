@@ -48,7 +48,7 @@ down: ## Remove the docker containers
 	APP_IMAGE=$(APP_IMAGE) \
 	CONTAINER_NAME=$(CONTAINER_NAME) \
 	DEVELOPER_UID=$(DEVELOPER_UID)		\
-	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) down --timeout 25
 
 .PHONY: console
 console: ## Enter into application container

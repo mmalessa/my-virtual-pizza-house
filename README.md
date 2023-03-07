@@ -55,3 +55,18 @@ https://github.com/rectorphp/rector
 ```shell
 make rector
 ```
+
+## Heavy tasks
+```shell
+# inside 1th docker console
+./bin/console messenger:consume heavy_worker_transport
+# inside 2nd docker console
+
+# find consumer PID
+ps aux |grep messenger:consume
+# start heavy command
+./bin/console app:heavy-worker:start
+# kill consumer
+kill consumer_pid
+```
+

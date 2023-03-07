@@ -13,7 +13,7 @@ RUN pecl config-set php_ini /usr/local/etc/php/conf.d/over.ini
 FROM base AS dev
 WORKDIR "/app"
 RUN apt-get update \
-    && apt-get install -y vim wget libicu-dev g++ zlib1g-dev
+    && apt-get install -y vim wget libicu-dev g++ zlib1g-dev procps
 RUN pecl install xdebug-3.2.0 \
     && docker-php-ext-enable xdebug
 RUN docker-php-ext-configure intl \

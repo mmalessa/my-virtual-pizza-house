@@ -6,9 +6,10 @@ namespace App\HeavyWorker\Application\MessageHandler;
 
 use App\HeavyWorker\Application\Message\HeavyWorker\Command\DoSomethingHeavy;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class DoSomethingHeavyHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DoSomethingHeavyHandler
 {
     public function __construct(private readonly LoggerInterface $logger)
     {

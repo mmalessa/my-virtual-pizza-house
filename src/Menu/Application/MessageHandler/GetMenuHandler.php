@@ -8,10 +8,11 @@ use App\Menu\Application\Message\Menu\Command\GetMenu;
 use App\Menu\Application\Message\Menu\Event\MenuGot;
 use App\Menu\Domain\Query\GetMenuQueryInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class GetMenuHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetMenuHandler
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

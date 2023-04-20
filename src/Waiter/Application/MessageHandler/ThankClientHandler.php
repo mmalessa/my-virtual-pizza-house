@@ -6,9 +6,10 @@ namespace App\Waiter\Application\MessageHandler;
 
 use App\Waiter\Application\Message\Waiter\Command\ThankClient;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class ThankClientHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ThankClientHandler
 {
     public function __construct(
         private readonly LoggerInterface $logger

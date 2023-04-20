@@ -7,10 +7,11 @@ namespace App\Kitchen\Application\MessageHandler;
 use App\Kitchen\Application\Message\Kitchen\Command\DoPizza;
 use App\Kitchen\Application\Message\Kitchen\Event\PizzaDone;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class DoPizzaHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DoPizzaHandler
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

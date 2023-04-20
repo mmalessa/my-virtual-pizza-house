@@ -8,10 +8,11 @@ use App\Waiter\Application\Message\Waiter\Command\ShowBill;
 use App\Waiter\Application\Message\Waiter\Event\BillPaid;
 use App\Waiter\Domain\CommunicatorInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class ShowBillHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ShowBillHandler
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

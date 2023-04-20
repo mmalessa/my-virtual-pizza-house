@@ -8,10 +8,11 @@ use App\Waiter\Application\Message\Waiter\Command\ServePizzas;
 use App\Waiter\Application\Message\Waiter\Event\PizzasServed;
 use App\Waiter\Domain\CommunicatorInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class ServePizzasHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ServePizzasHandler
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

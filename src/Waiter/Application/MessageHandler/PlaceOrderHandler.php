@@ -7,10 +7,11 @@ namespace App\Waiter\Application\MessageHandler;
 use App\Waiter\Application\Message\Waiter\Command\PlaceOrder;
 use App\Waiter\Application\Message\Waiter\Event\OrderPlaced;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class PlaceOrderHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class PlaceOrderHandler
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

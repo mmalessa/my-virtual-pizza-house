@@ -8,17 +8,17 @@
         "ext-amqp": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "predis/predis": "v2.1.1",
-        "ramsey/uuid": "4.7.3",
-        "symfony/amqp-messenger": "v6.2.5",
-        "symfony/console": "v6.2.5",
-        "symfony/dotenv": "v6.1.11",
+        "predis/predis": "v2.1.2",
+        "ramsey/uuid": "4.7.4",
+        "symfony/amqp-messenger": "v6.2.8",
+        "symfony/console": "v6.2.8",
+        "symfony/dotenv": "v6.2.8",
         "symfony/flex": "v2.2.5",
-        "symfony/framework-bundle": "v6.1.11",
-        "symfony/messenger": "v6.1.11",
+        "symfony/framework-bundle": "v6.2.9",
+        "symfony/messenger": "v6.2.8",
         "symfony/monolog-bundle": "v3.8.0",
-        "symfony/runtime": "v6.1.11",
-        "symfony/yaml": "v6.1.11"
+        "symfony/runtime": "v6.2.8",
+        "symfony/yaml": "v6.2.7"
     },
     "require-dev": {
         "colinodell/psr-testlogger": ">=1.1",
@@ -78,7 +78,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.1.*"
+            "require": "6.2.*"
         }
     }
 }

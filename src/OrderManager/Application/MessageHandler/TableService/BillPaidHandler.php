@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Waiter\Command\ThankClient;
 use App\OrderManager\Application\Message\Waiter\Event\BillPaid;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]

@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Kitchen\Event\PizzaDone;
 use App\OrderManager\Application\Message\Waiter\Command\ServePizzas;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]

@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Waiter\Command\PlaceOrder;
 use App\OrderManager\Application\Message\Waiter\Event\MenuShown;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]

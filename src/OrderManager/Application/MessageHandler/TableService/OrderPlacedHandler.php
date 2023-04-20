@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Kitchen\Command\DoPizza;
 use App\OrderManager\Application\Message\Waiter\Event\OrderPlaced;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

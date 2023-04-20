@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Waiter\Command\ShowBill;
 use App\OrderManager\Application\Message\Waiter\Event\PizzasServed;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 

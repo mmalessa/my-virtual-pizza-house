@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\OrderManager\Application\MessageHandler;
+namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Domain\TableServiceRepositoryInterface;
 use Psr\Log\LoggerInterface;

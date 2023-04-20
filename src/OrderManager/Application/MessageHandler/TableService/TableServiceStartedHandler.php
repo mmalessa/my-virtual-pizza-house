@@ -6,7 +6,6 @@ namespace App\OrderManager\Application\MessageHandler\TableService;
 
 use App\OrderManager\Application\Message\Menu\Command\GetMenu;
 use App\OrderManager\Application\Message\Waiter\Event\TableServiceStarted;
-use App\OrderManager\Application\MessageHandler\TableServiceAbstract;
 use App\OrderManager\Domain\TableService;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

@@ -58,6 +58,15 @@ console: ## Enter into application container
 console-root: ## Enter into application container (as root)
 	@docker exec -it -u root $(CONTAINER_NAME) bash
 
+
+.PHONY: dev-consume
+dev-consume: ## Start consuming
+	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
+
+.PHONY: dev-go
+dev-go: ## run dev command
+	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console app:waiter:start TBL1
+
 .PHONY: tests
 tests: ## Run tests (phpunit)
 	@./vendor/bin/phpunit --testsuite=all

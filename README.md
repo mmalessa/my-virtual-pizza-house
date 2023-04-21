@@ -14,6 +14,15 @@ composer install
 ## Start the machinery
 ### Option 1
 ```shell
+# 1th console (watch the logs)
+make dev-consume
+
+# 2nd console (can be several times)
+make dev-go
+```
+
+### Option 2
+```shell
 # inside 1th docker console
 ./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
 
@@ -22,7 +31,7 @@ composer install
 ```
 Nothing spectacular, but... it works!
 
-### Option 2
+### Option 3
 ```shell
 # inside 1th docker console
 ./bin/console messenger:consume order_manager_transport

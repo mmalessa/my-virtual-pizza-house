@@ -6,7 +6,7 @@ namespace Mmalessa\MessengerAddons;
 
 class DefaultMessageSerializer implements MessageSerializerInterface
 {
-    private CONST ALLOWED_TYPES = ["string", "int", "float", "array"];
+    private CONST ALLOWED_SIMPLE_TYPES = ["string", "int", "float", "array"];
 
     public function __construct(
         private string $messageClassPrefix
@@ -50,19 +50,25 @@ class DefaultMessageSerializer implements MessageSerializerInterface
         foreach($parameters as $parameter) {
             $parameterName = $parameter->getName();
             $parameterType = $parameter->getType();
-            if(!in_array($parameterType, self::ALLOWED_TYPES)) {
+            if(
+                !in_array($parameterType, self::ALLOWED_SIMPLE_TYPES)
+                && !(new \ReflectionClass($parameterType))->implementsInterface(\Stringable::class)
+            ) {
                 throw new \InvalidArgumentException(sprintf(
-                    "There is '%s' variable with an illegal type '%s' in the '%s' object. Types allowed: [%s]",
+                    "There is '%s' variable with an illegal type '%s' in the '%s' object. "
+                    ."The type must be: [%s] or must implement an interface: [%s]",
                     $parameterName,
                     $parameterType,
                     get_class($message),
-                    implode(", ", self::ALLOWED_TYPES)
+                    implode(", ", self::ALLOWED_SIMPLE_TYPES),
+                    \Stringable::class
                 ));
             }
-            $serializedMessage[$parameterName] = $message->{$parameterName};
+            $serializedMessage[$parameterName] = (string)$message->{$parameterName};
         }
         return $serializedMessage;
     }
+
 
     private function autoDeserializeMessage(string $type, array $payload): MessageInterface
     {

@@ -1,7 +1,0 @@
-services:
-    App\Waiter\UI\Command\:
-        resource: '%kernel.project_dir%/src/Waiter/UI/Command/*.php'
-        tags:
-            - { name: console.command }
-        bind:
-            $messageBus: '@waiter.message.bus'

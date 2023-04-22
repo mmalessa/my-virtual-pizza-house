@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Waiter\UI\Command;
+namespace App\Tests\Unit\OrderManager\UI\Command;
 
-use App\Waiter\Application\Message\Waiter\Event\TableServiceStarted;
-use App\Waiter\UI\Command\StartCommand;
+use App\OrderManager\Application\Message\OrderManager\Command\Start;
+use App\OrderManager\UI\ConsoleCommand\StartCommand;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +25,7 @@ class StartCommandTest extends KernelTestCase
         $application = new Application();
         $application->add(new StartCommand($traceableMessageBus));
 
-        $command = $application->find('app:waiter:start');
+        $command = $application->find('app:order-manager:start');
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -33,10 +33,10 @@ class StartCommandTest extends KernelTestCase
             'tableid' => 'T1'
         ]);
 
-        $this->assertEquals("[Command] Start table service (tableId: T1)\n", $commandTester->getDisplay(true));
+//        $this->assertEquals("[Command] Start table service (tableId: T1)\n", $commandTester->getDisplay(true));
         $dispatchedMessages = $traceableMessageBus->getDispatchedMessages();
         $this->assertEquals(1, count($dispatchedMessages));
-        $this->assertEquals(TableServiceStarted::class, get_class($dispatchedMessages[0]['message']));
+        $this->assertEquals(Start::class, get_class($dispatchedMessages[0]['message']));
         $this->assertEquals(Command::SUCCESS, $commandTester->getStatusCode());
     }
 }

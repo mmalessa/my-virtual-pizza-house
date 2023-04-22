@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\OrderManager\Domain;
 
+use App\OrderManager\Application\Saga\SagaId;
+
 class TableService
 {
     private TableServiceStatus $status;
@@ -11,7 +13,12 @@ class TableService
     private bool $menuWasShownStatus;
     private array $menuShownCustomer;
 
-    public function __construct(public readonly string $sagaId)
+    public static function create(SagaId $sagaId)
+    {
+        return new self($sagaId);
+    }
+
+    private function __construct(public readonly SagaId $sagaId)
     {
         $this->status = TableServiceStatus::Started;
         $this->kitchenOrders = [];

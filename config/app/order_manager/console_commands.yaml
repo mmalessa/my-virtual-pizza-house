@@ -1,0 +1,7 @@
+services:
+    App\OrderManager\UI\ConsoleCommand\:
+        resource: '%kernel.project_dir%/src/OrderManager/UI/ConsoleCommand/*Command.php'
+        tags:
+            - { name: console.command }
+        bind:
+            $messageBus: '@order_manager.message.bus'

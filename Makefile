@@ -65,7 +65,7 @@ dev-consume: ## Start consuming
 
 .PHONY: dev-go
 dev-go: ## run dev command
-	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console app:waiter:start TBL1
+	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console app:order-manager:start TBL1
 
 .PHONY: tests
 tests: ## Run tests (phpunit)

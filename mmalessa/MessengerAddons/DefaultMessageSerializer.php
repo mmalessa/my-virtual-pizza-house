@@ -52,10 +52,11 @@ class DefaultMessageSerializer implements MessageSerializerInterface
         foreach($parameters as $parameter) {
             $parameterName = $parameter->getName();
             $parameterType = $parameter->getType();
-            if(
-                !in_array($parameterType, self::ALLOWED_SIMPLE_TYPES)
-                && !(new \ReflectionClass($parameterType))->implementsInterface(\Stringable::class)
-            ) {
+            if(in_array($parameterType, self::ALLOWED_SIMPLE_TYPES)) {
+                $serializedMessage[$parameterName] = $message->{$parameterName};
+            } elseif ((new \ReflectionClass($parameterType))->implementsInterface(\Stringable::class)) {
+                $serializedMessage[$parameterName] = (string)$message->{$parameterName};
+            } else {
                 throw new \InvalidArgumentException(sprintf(
                     "There is '%s' variable with an illegal type '%s' in the '%s' object. "
                     ."The type must be: [%s] or must implement an interface: [%s]",
@@ -66,7 +67,6 @@ class DefaultMessageSerializer implements MessageSerializerInterface
                     \Stringable::class
                 ));
             }
-            $serializedMessage[$parameterName] = (string)$message->{$parameterName};
         }
         return $serializedMessage;
     }

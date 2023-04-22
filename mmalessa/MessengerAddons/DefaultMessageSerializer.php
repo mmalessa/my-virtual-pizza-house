@@ -69,7 +69,6 @@ class DefaultMessageSerializer implements MessageSerializerInterface
         return $serializedMessage;
     }
 
-
     private function autoDeserializeMessage(string $type, array $payload): MessageInterface
     {
         try {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mmalessa\MessengerAddons;
 
+use Mmalessa\MessengerAddons\Error\ClassDoesNotExistError;
+
 class DefaultMessageSerializer implements MessageSerializerInterface
 {
     private CONST ALLOWED_SIMPLE_TYPES = ["string", "int", "float", "array"];
@@ -73,6 +75,9 @@ class DefaultMessageSerializer implements MessageSerializerInterface
     {
         try {
             $className = MessagePrefix::add($type, $this->messageClassPrefix);
+            if (!class_exists($className)) {
+                throw new ClassDoesNotExistError(sprintf("Class %s does not exists", $className));
+            }
             $classParameters = [];
             $reflection = new \ReflectionClass($className);
             $constructor = $reflection->getConstructor();
@@ -86,7 +91,7 @@ class DefaultMessageSerializer implements MessageSerializerInterface
             }
             $message = $reflection->newInstanceArgs($classParameters);
             return $message;
-        } catch (\JsonException $e) {
+        } catch (ClassDoesNotExistError $e) {
             //TODO
             throw $e;
         } catch (\Exception $e) {

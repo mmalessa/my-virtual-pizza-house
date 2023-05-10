@@ -1,7 +1,7 @@
 APP_NAME			= my_virtual_pizza_house
 ####
 
-DOCKER_COMPOSE		= docker-compose
+DOCKER_COMPOSE		= $(if $(shell which docker-compose),docker-compose,docker compose)
 DEV_DOCKERFILE		?= .docker/Dockerfile
 APP_IMAGE			= $(APP_NAME)-app
 CONTAINER_NAME		= $(APP_NAME)-app

@@ -57,6 +57,60 @@ make tests-mutation # see var/infection-logs.html
 ```
 ...I know there's still a lot to do here ;)
 
+## Architecture
+**Service Oriented Architecture with Asynchronous Flow Orchestration**
+
+```txt
+                           Message Bus
+                                |
+[Order Manager] --(commands)--> |
+                <--(events)---- |
+                                | --(commands)--> [Waiter]
+                                | <--(events)----
+                                |
+                                | --(commands)--> [Menu]
+                                | <--(events)----
+                                |
+                                | --(commands)--> [Kitchen]
+                                | <--(events)----
+```
+Communication is only between the orchestrator and the module.
+Never between module and module directly.
+
+Commands and events should be symmetrical:
+- command: 'DoSomething'
+- event: 'SomethingDone'
+
+
+## Scenario
+In this example we have a scenario: `TableService`.
+Scenario directory is: `App/OrderManager/Application/MessageHandler/TableService`.
+The scenario is a simplified action of ordering pizza and fulfilling this order.
+
+- UI = User Interface (terminal, controller, handler...)
+- OM = Order Manager
+- M = Menu
+- W = Waiter
+- K = Kitchen
+
+
+UI: command `Start` -> msgBus 
+- -> OM:`StartHandler` -> `TableServiceStarted` -> msgBus
+- -> OM:`TableServieStartedHandler` -> `GetMenu` -> msgBus
+- -> M:`GetMenuHandler` -> `MenuGot` -> msgBus
+- -> OM: `MenuGotHandler` -> (`ShowMenu` -> msgBus or `PlaceOrder` -> msgBus)
+- -> W: `ShowMenuHandler` -> `MenuShown` -> msgBus
+- -> OM: `MenuShownHandler` -> `PlaceOrder` -> msgBus
+- -> W: `PlaceOrderHandler` -> `OrderPlaced` -> msgBus
+- -> OM: `OrderPlacedHandler` -> `DoPizza` -> msgBus (many commands, depending on order)
+- -> K: `DoPizzaHandler` -> `PizzaDone` -> msgBus
+- -> OM: `PizzaDoneHandler` -> (if all Pizzas Done) -> `ServePizzas`
+- -> W: `ServePizzasHandler` -> `PizzasServed` -> msgBus
+- -> OM: `PizzasServedHandler` -> `ShowBill` -> msgBus
+- -> W: `ShowBillHandler` -> `BillPaid` -> msgBus
+- -> OM: `BillPaidHandler` -> `ThankClient` -> msgBus
+- -> W: `TankClientHandler`
+
 ## Tools
 Inside console
 #### Rector instantly upgrades and refactors the PHP code of your application

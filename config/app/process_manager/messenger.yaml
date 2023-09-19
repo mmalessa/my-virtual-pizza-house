@@ -36,7 +36,7 @@ framework:
                 retry_strategy:
                     max_retries: 2
                     delay: 2000
-                    multiplier: 4
+                    multiplier: 1
         routing:
             'App\ProcessManager\Application\Message\ProcessManagerMessageInterface': process_manager_transport
         buses:

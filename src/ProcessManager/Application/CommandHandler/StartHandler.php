@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\ProcessManager\Application\MessageHandler;
+namespace App\ProcessManager\Application\CommandHandler;
 
 use App\ProcessManager\Application\Message\ProcessManager\Command\Start;
 use App\ProcessManager\Application\Message\ProcessManager\Event\TableServiceStarted;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
+
+#[AsMessageHandler]
 class StartHandler
 {
     public function __construct(

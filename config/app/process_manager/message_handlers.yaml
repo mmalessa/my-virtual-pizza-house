@@ -1,18 +1,16 @@
 services:
 
-    App\ProcessManager\Application\MessageHandler\TableService\:
-        resource: '%kernel.project_dir%/src/ProcessManager/Application/MessageHandler/TableService/*Handler.php'
-        tags:
-            - { name: messenger.message_handler, from_transport: process_manager_transport }
+    App\ProcessManager\Application\CommandHandler\:
+        resource: '%kernel.project_dir%/src/ProcessManager/Application/CommandHandler/*Handler.php'
+        autoconfigure: true
+        bind:
+            $messageBus: '@process_manager.message.bus'
+            $logger: '@monolog.logger.process_manager'
+
+    App\ProcessManager\Application\Saga\:
+        resource: '%kernel.project_dir%/src/ProcessManager/Application/Saga/*Saga.php'
+        autoconfigure: true
         bind:
             $messageBus: '@process_manager.message.bus'
             $logger: '@monolog.logger.process_manager'
             $tableServiceRepository: '@App\ProcessManager\Domain\TableServiceRepositoryInterface'
-
-    App\ProcessManager\Application\MessageHandler\:
-        resource: '%kernel.project_dir%/src/ProcessManager/Application/MessageHandler/*Handler.php'
-        tags:
-            - { name: messenger.message_handler, from_transport: process_manager_transport }
-        bind:
-            $messageBus: '@process_manager.message.bus'
-            $logger: '@monolog.logger.process_manager'

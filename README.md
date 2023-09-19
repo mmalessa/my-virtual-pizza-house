@@ -24,7 +24,7 @@ make dev-go
 ### Option 2
 ```shell
 # inside 1th docker console
-./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
+./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
 
 # inside 2nd docker console
 ./bin/console app:waiter:start TBL1
@@ -34,7 +34,7 @@ Nothing spectacular, but... it works!
 ### Option 3
 ```shell
 # inside 1th docker console
-./bin/console messenger:consume order_manager_transport
+./bin/console messenger:consume process_manager_transport
 # inside 2nd docker console
 ./bin/console messenger:consume menu_transport
 # inside 3rd docker console
@@ -84,7 +84,7 @@ Commands and events should be symmetrical:
 
 ## Scenario
 In this example we have a scenario: `TableService`.
-Scenario directory is: `App/OrderManager/Application/MessageHandler/TableService`.
+Scenario directory is: `App/ProcessManager/Application/MessageHandler/TableService`.
 The scenario is a simplified action of ordering pizza and fulfilling this order.
 
 - UI = User Interface (terminal, controller, handler...)

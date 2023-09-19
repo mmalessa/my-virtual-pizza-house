@@ -61,7 +61,7 @@ console-root: ## Enter into application container (as root)
 
 .PHONY: dev-consume
 dev-consume: ## Start consuming
-	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console messenger:consume order_manager_transport menu_transport waiter_transport kitchen_transport
+	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
 
 .PHONY: dev-go
 dev-go: ## run dev command

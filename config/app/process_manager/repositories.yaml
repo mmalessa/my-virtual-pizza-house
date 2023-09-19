@@ -1,0 +1,16 @@
+services:
+
+    App\ProcessManager\Domain\TableServiceRepositoryInterface:
+#        alias: App\ProcessManager\Infrastructure\Repository\InMemory\TableServiceRepository
+        alias: App\ProcessManager\Infrastructure\Repository\Redis\TableServiceRepository
+
+    App\ProcessManager\Infrastructure\Repository\InMemory\TableServiceRepository:
+
+    app.repository.redis:
+        class: Predis\Client
+        arguments:
+            $parameters: '%env(REDIS_URL)%'
+    App\ProcessManager\Infrastructure\Repository\Redis\TableServiceRepository:
+        arguments:
+            $client: '@app.repository.redis'
+            $ttl: 3600

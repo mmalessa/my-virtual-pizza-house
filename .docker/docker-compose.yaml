@@ -3,35 +3,39 @@ version: '3.7'
 services:
 
     app:
-        image: ${APP_IMAGE}
         build:
-            target: dev
-            dockerfile: .docker/Dockerfile
-            context: ..
+            context: php
+            target: ${BUILD_TARGET}
             args:
                 DEVELOPER_UID: ${DEVELOPER_UID}
-        container_name: ${CONTAINER_NAME}
+        user: ${DEVELOPER_UID}:${DEVELOPER_UID}
+        container_name: ${COMPOSE_PROJECT_NAME}-app
         depends_on:
-            dev-rabbitmq:
+            rabbitmq:
                 condition: service_healthy
-            dev-redis:
+            redis:
                 condition: service_started
         restart: on-failure
         volumes:
             - ../:/app/
-            - ./php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+            - ./php/php.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+            - ./php/php_dev.ini:/usr/local/etc/php/conf.d/99-overrides_dev.ini
             - app_home:/home/developer
 #            - ../../.ssh:/home/developer/.ssh
         working_dir: /app
         tty: true
         networks:
             devapp:
+        extra_hosts:
+            - host.docker.internal:host-gateway
 
-    dev-rabbitmq:
+    rabbitmq:
         image: rabbitmq:3.11.9-management
-        container_name: dev-rabbitmq
+        container_name: ${COMPOSE_PROJECT_NAME}-rabbitmq
         restart: on-failure
-        ports: [ 5672:5672, 15672:15672 ]
+        ports:
+            - "5672:5672"
+            - "15672:15672"
         networks:
             devapp:
         volumes:
@@ -46,27 +50,27 @@ services:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
 
-    dev-redis:
+    redis:
         image: redis:7.0.5
-        container_name: dev-redis
+        container_name: ${COMPOSE_PROJECT_NAME}-redis
         restart: on-failure
         volumes:
             - redis_data:/data
         networks:
             devapp:
-        ports: [ 6379:6379 ]
-#        healthcheck:
-#            test: redis-cli ping || exit 1
+        ports:
+            - "6379:6379"
 
-    dev-redis-commander:
+    redis-commander:
         image: rediscommander/redis-commander:latest
-        container_name: dev-redis-commander
+        container_name: ${COMPOSE_PROJECT_NAME}-redis-commander
         restart: on-failure
         environment:
             REDIS_HOSTS: local:dev-redis:6379
         networks:
             devapp:
-        ports: [ 8081:8081 ]
+        ports:
+            - "8081:8081"
 
 networks:
     devapp:

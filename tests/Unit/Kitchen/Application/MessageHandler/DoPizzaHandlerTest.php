@@ -8,6 +8,7 @@ use App\Kitchen\Application\Message\Kitchen\Command\DoPizza;
 use App\Kitchen\Application\Message\Kitchen\Event\PizzaDone;
 use App\Kitchen\Application\MessageHandler\DoPizzaHandler;
 use ColinODell\PsrTestLogger\TestLogger;
+use Mmalessa\SomeTools\SomeDelayInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -21,6 +22,7 @@ class DoPizzaHandlerTest extends TestCase
         $kitchenOrderId = '8333b390-b7e8-468a-a0a9-d71a1aff3982';
         $pizzaId = 'PizzaId';
         $pizzaSize = 'PizzaSize';
+        $delay = $this->createMock(SomeDelayInterface::class);
 
         $doPizza = new DoPizza($sagaId, $kitchenOrderId, $pizzaId, $pizzaSize);
         $pizzaDone = new PizzaDone($sagaId, $kitchenOrderId);
@@ -31,7 +33,7 @@ class DoPizzaHandlerTest extends TestCase
         $messageBus->method('dispatch')->willReturn(new Envelope(new \stdClass()));
         $traceableMessageBus = new TraceableMessageBus($messageBus);
         $logger = new TestLogger();
-        $handler = new DoPizzaHandler($traceableMessageBus, $logger);
+        $handler = new DoPizzaHandler($traceableMessageBus, $logger, $delay);
         $handler($doPizza);
 
         $dispatchedMessages = $traceableMessageBus->getDispatchedMessages();

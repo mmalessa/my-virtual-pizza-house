@@ -7,8 +7,8 @@ services:
             $messageBus: '@process_manager.message.bus'
             $logger: '@monolog.logger.process_manager'
 
-    App\ProcessManager\Application\Saga\:
-        resource: '%kernel.project_dir%/src/ProcessManager/Application/Saga/*Saga.php'
+    App\ProcessManager\Application\Process\:
+        resource: '%kernel.project_dir%/src/ProcessManager/Application/Process/*Process.php'
         autoconfigure: true
         bind:
             $messageBus: '@process_manager.message.bus'

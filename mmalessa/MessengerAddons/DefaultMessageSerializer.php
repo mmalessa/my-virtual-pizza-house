@@ -34,7 +34,7 @@ class DefaultMessageSerializer implements MessageSerializerInterface
     {
         $className = MessagePrefix::add($type, $this->messageClassPrefix);
         if(method_exists($className, 'deserialize')) {
-            $className::deserialize($payload);
+            return $className::deserialize($payload);
         }
         return $this->autoDeserializeMessage($type, $payload);
     }

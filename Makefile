@@ -61,28 +61,24 @@ console-root: ## Enter into application container (as root)
 
 .PHONY: dev-consume
 dev-consume: ## Start consuming
-	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
+	@docker exec -it -u developer $(CONTAINER_NAME) php -d xdebug.start_with_request=0 ./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
 
 .PHONY: dev-go
 dev-go: ## run dev command
-	@docker exec -it -u developer $(CONTAINER_NAME) ./bin/console app:order-manager:start TBL1
-
-.PHONY: tests
-tests: ## Run tests (phpunit)
-	@./vendor/bin/phpunit --testsuite=all
+	@docker exec -it -u developer $(CONTAINER_NAME) php -d xdebug.start_with_request=0 ./bin/console app:order-manager:start TBL1
 
 .PHONY: tests-unit
 tests-unit: ## Run tests (phpunit)
-	@./vendor/bin/phpunit --testsuite=unit
+	@docker exec -it -u developer $(CONTAINER_NAME) php -d xdebug.start_with_request=0 ./vendor/bin/phpunit --testsuite=unit
 
 .PHONY: tests-coverage
 tests-coverage: ## Run tests with console text coverage report (phpunit)
-	@php -dxdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text
+	@docker exec -it -u developer $(CONTAINER_NAME) php -d xdebug.mode=coverage ./vendor/bin/phpunit --testsuite=coverage --coverage-text
 
 .PHONY: tests-mutation
 tests-mutation: ## Run mutation tests (infection)
-	@infection
+	@docker exec -it -u developer $(CONTAINER_NAME) infection
 
 .PHONY: rector
 rector: ## Run rector refactoring tool (dry-run)
-	@./vendor/bin/rector process src --dry-run
+	@docker exec -it -u developer $(CONTAINER_NAME) ./vendor/bin/rector process src --dry-run

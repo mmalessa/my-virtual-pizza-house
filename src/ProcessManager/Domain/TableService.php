@@ -4,26 +4,20 @@ declare(strict_types=1);
 
 namespace App\ProcessManager\Domain;
 
-use App\ProcessManager\Application\Saga\SagaId;
-
 class TableService
 {
-    private TableServiceStatus $status;
-    private array $kitchenOrders;
-    private bool $menuWasShownStatus;
-    private array $menuShownCustomer;
+    private TableServiceStatus $status = TableServiceStatus::Started;
+    private array $kitchenOrders = [];
+    private bool $menuWasShownStatus = false;
+    private array $menuShownCustomer = [];
 
-    public static function create(SagaId $sagaId)
+    public static function create(string $processId)
     {
-        return new self($sagaId);
+        return new self($processId);
     }
 
-    private function __construct(public readonly SagaId $sagaId)
+    private function __construct(public string $processId)
     {
-        $this->status = TableServiceStatus::Started;
-        $this->kitchenOrders = [];
-        $this->menuWasShownStatus = false;
-        $this->menuShownCustomer = [];
     }
 
     public function finishService()

@@ -7,3 +7,10 @@ services:
             $messageBus: '@waiter.message.bus'
             $logger: '@monolog.logger.waiter'
             $communicator: '@App\Waiter\Domain\CommunicatorInterface'
+            $delay: '@app.waiter.some_delay'
+
+    app.waiter.some_delay:
+        class: Mmalessa\SomeTools\SomeDelay
+        arguments:
+            $logger: '@monolog.logger.waiter'
+            $delayTime: 3

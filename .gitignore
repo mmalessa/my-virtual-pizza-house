@@ -9,3 +9,7 @@
 /.phpunit.cache/
 /.idea
 /**/.gitkeep
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

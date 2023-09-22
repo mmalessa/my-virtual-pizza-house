@@ -34,8 +34,8 @@ framework:
                                 - 'ProcessManager.Command.*'
                                 - '*.Event.*'
                 retry_strategy:
-                    max_retries: 2
-                    delay: 2000
+                    max_retries: 1
+                    delay: 1000
                     multiplier: 1
         routing:
             'App\ProcessManager\Application\Message\ProcessManagerMessageInterface': process_manager_transport

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\ProcessManager\Application\Message\Waiter\Command;
+namespace App\Waiter\Application\Message\Waiter\Command;
 
-use App\ProcessManager\Application\Message\ProcessManagerMessageInterface;
+use App\Waiter\Application\Message\WaiterMessageInterface;
 use Ramsey\Uuid\Uuid;
 
-readonly class ThankClient implements ProcessManagerMessageInterface
+class FinishClient implements WaiterMessageInterface
 {
     public function __construct(public string $sagaId)
     {

@@ -16,23 +16,23 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class StartHandler
 {
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private LoggerInterface $logger
+        private readonly MessageBusInterface $messageBus,
+        private readonly LoggerInterface $logger
     ) {
     }
 
     public function __invoke(Start $command)
     {
-        $sagaId = Uuid::uuid4()->toString();
+        $processId = Uuid::uuid6()->toString();
 
         $this->logger->info(sprintf(
             "We start with table: %s (New SagaId: %s)",
             $command->tableId,
-            $sagaId
+            $processId
         ));
 
         $this->messageBus->dispatch(new TableServiceStarted(
-            $sagaId,
+            $processId,
             $command->tableId
         ));
     }

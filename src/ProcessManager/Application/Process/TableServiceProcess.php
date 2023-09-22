@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ProcessManager\Application\Saga;
+namespace App\ProcessManager\Application\Process;
 
 use App\ProcessManager\Application\Message\Kitchen\Command\DoPizza;
 use App\ProcessManager\Application\Message\Kitchen\Event\PizzaDone;
@@ -13,8 +13,9 @@ use App\ProcessManager\Application\Message\Waiter\Command\PlaceOrder;
 use App\ProcessManager\Application\Message\Waiter\Command\ServePizzas;
 use App\ProcessManager\Application\Message\Waiter\Command\ShowBill;
 use App\ProcessManager\Application\Message\Waiter\Command\ShowMenu;
-use App\ProcessManager\Application\Message\Waiter\Command\ThankClient;
+use App\ProcessManager\Application\Message\Waiter\Command\FinishClient;
 use App\ProcessManager\Application\Message\Waiter\Event\BillPaid;
+use App\ProcessManager\Application\Message\Waiter\Event\ClientFinished;
 use App\ProcessManager\Application\Message\Waiter\Event\MenuShown;
 use App\ProcessManager\Application\Message\Waiter\Event\OrderPlaced;
 use App\ProcessManager\Application\Message\Waiter\Event\PizzasServed;
@@ -24,9 +25,8 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class TableServiceSaga
+class TableServiceProcess
 {
     public function __construct(
         protected readonly MessageBusInterface $messageBus,
@@ -38,16 +38,16 @@ class TableServiceSaga
 
     #[AsMessageHandler]
     public function onTableServiceStarted(TableServiceStarted $event): void {
-        $sagaId = $event->sagaId;
-        $tableService = TableService::create($sagaId);
+        $processId = $event->processId;
+        $tableService = TableService::create($processId);
         $this->tableServiceRepository->save($tableService);
 
         $this->logger->info(sprintf(
             "[%s] onTableServiceStarted (tableId: %s)",
-            $sagaId,
+            $processId,
             $event->tableId
         ));
-        $this->messageBus->dispatch(new GetMenu($sagaId));
+        $this->messageBus->dispatch(new GetMenu($processId));
     }
 
     #[AsMessageHandler]
@@ -154,7 +154,7 @@ class TableServiceSaga
             $sagaId,
             $delayMs
         ));
-        $this->messageBus->dispatch(new ShowBill($sagaId, $bill), [new DelayStamp($delayMs)]);
+        $this->messageBus->dispatch(new ShowBill($sagaId, $bill));
     }
 
     #[AsMessageHandler]
@@ -165,6 +165,11 @@ class TableServiceSaga
         $tableService->finishService();
         $this->tableServiceRepository->save($tableService);
         $this->logger->info(sprintf("[%s] Dispatch->ThankClient", $sagaId));
-        $this->messageBus->dispatch(new ThankClient($sagaId));
+        $this->messageBus->dispatch(new FinishClient($sagaId));
+    }
+
+    #[AsMessageHandler]
+    public function onClientFinished(ClientFinished $event): void {
+        $this->logger->info("*** END OF PROCESS ***");
     }
 }

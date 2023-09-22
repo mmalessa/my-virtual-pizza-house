@@ -6,3 +6,11 @@ services:
         bind:
             $messageBus: '@kitchen.message.bus'
             $logger: '@monolog.logger.kitchen'
+            $delay: '@app.kitchen.some_delay'
+
+
+    app.kitchen.some_delay:
+        class: Mmalessa\SomeTools\SomeDelay
+        arguments:
+            $delayTime: 1
+            $logger: '@monolog.logger.kitchen'

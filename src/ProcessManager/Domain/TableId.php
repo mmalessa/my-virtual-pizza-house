@@ -6,7 +6,7 @@ namespace App\ProcessManager\Domain;
 
 class TableId implements \Stringable
 {
-    public function __construct(private string $tableId)
+    public function __construct(private readonly string $tableId)
     {
         if (empty($this->tableId)) {
             throw new \InvalidArgumentException("TableId cannot be empty");
@@ -17,4 +17,5 @@ class TableId implements \Stringable
     {
         return $this->tableId;
     }
+
 }

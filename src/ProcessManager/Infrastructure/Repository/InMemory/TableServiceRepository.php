@@ -12,7 +12,7 @@ class TableServiceRepository implements TableServiceRepositoryInterface
     private array $storage;
     public function save(TableService $tableService)
     {
-        $sagaId = $tableService->sagaId;
+        $sagaId = $tableService->processId;
         $this->storage[$sagaId] = $tableService;
     }
     public function get(string $sagaId): TableService

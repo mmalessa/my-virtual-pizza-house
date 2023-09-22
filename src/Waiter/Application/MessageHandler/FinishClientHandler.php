@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace App\Waiter\Application\MessageHandler;
 
-use App\Waiter\Application\Message\Waiter\Command\ThankClient;
+use App\Waiter\Application\Message\Waiter\Command\FinishClient;
+use App\Waiter\Application\Message\Waiter\Event\ClientFinished;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
-class ThankClientHandler
+class FinishClientHandler
 {
     public function __construct(
+        private readonly MessageBusInterface $messageBus,
         private readonly LoggerInterface $logger
-    )
-    {
+    ) {
     }
 
-    public function __invoke(ThankClient $command)
+    public function __invoke(FinishClient $command)
     {
         $sagaId = $command->sagaId;
         $this->logger->info(sprintf(
@@ -25,5 +27,6 @@ class ThankClientHandler
             $sagaId
         ));
         echo "---- Thank you very much for staying with us. Welcome again! ----\n";
+        $this->messageBus->dispatch(new ClientFinished($command->sagaId));
     }
 }

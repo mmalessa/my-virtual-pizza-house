@@ -26,9 +26,9 @@ class TableServiceRepository implements TableServiceRepositoryInterface
     public function save(TableService $tableService)
     {
         if ($this->ttl !== null) {
-            $this->client->setex($tableService->sagaId, $this->ttl, serialize($tableService));
+            $this->client->setex($tableService->processId, $this->ttl, serialize($tableService));
         } else {
-            $this->client->set($tableService->sagaId, serialize($tableService));
+            $this->client->set($tableService->processId, serialize($tableService));
         }
     }
 }

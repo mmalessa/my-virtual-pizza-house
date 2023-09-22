@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 )]
 class DoSomethingHeavyCommand extends Command
 {
-    public function __construct(private MessageBusInterface $messageBus)
+    public function __construct(private readonly MessageBusInterface $messageBus)
     {
         parent::__construct();
     }

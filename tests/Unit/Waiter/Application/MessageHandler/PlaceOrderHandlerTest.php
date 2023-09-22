@@ -11,6 +11,7 @@ use App\Waiter\Application\MessageHandler\PlaceOrderHandler;
 use App\Waiter\Application\MessageHandler\ShowMenuHandler;
 use App\Waiter\Domain\CommunicatorInterface;
 use ColinODell\PsrTestLogger\TestLogger;
+use Mmalessa\SomeTools\SomeDelayInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -36,8 +37,9 @@ class PlaceOrderHandlerTest extends TestCase
         $messageBus->method('dispatch')->willReturn(new Envelope(new \stdClass()));
         $traceableMessageBus = new TraceableMessageBus($messageBus);
         $logger = new TestLogger();
+        $delay = $this->createMock(SomeDelayInterface::class);
 
-        $handler = new PlaceOrderHandler($traceableMessageBus, $logger);
+        $handler = new PlaceOrderHandler($traceableMessageBus, $logger, $delay);
         ob_start();
         $handler($placeOrder);
         ob_end_clean();

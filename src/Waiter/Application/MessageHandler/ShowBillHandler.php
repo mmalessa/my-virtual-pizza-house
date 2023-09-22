@@ -7,6 +7,7 @@ namespace App\Waiter\Application\MessageHandler;
 use App\Waiter\Application\Message\Waiter\Command\ShowBill;
 use App\Waiter\Application\Message\Waiter\Event\BillPaid;
 use App\Waiter\Domain\CommunicatorInterface;
+use Mmalessa\SomeTools\SomeDelayInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -17,7 +18,8 @@ class ShowBillHandler
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly LoggerInterface $logger,
-        private readonly CommunicatorInterface $communicator
+        private readonly CommunicatorInterface $communicator,
+        private readonly SomeDelayInterface $delay
     )
     {
     }
@@ -34,6 +36,9 @@ class ShowBillHandler
             "[%s] This is where communication with the client should pay. Let's simplify it.",
             $sagaId
         ));
+
+        $this->delay->delay();
+
         $this->messageBus->dispatch(new BillPaid($sagaId, $command->bill['sum']));
     }
 }

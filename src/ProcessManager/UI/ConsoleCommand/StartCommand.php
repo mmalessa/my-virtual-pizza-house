@@ -34,8 +34,7 @@ class StartCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $tableId = new Tableid($input->getArgument('tableid'));
-        $startTableService = new Start($tableId);
+        $startTableService = new Start($input->getArgument('tableid'));
         $this->messageBus->dispatch($startTableService);
         return Command::SUCCESS;
     }

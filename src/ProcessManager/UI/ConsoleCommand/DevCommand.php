@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\ProcessManager\UI\ConsoleCommand;
 
-use App\ProcessManager\Application\Message\Waiter\Command\StartTableService;
-use App\ProcessManager\Application\Saga\SagaId;
-use App\ProcessManager\Domain\TableId;
-use Ramsey\Uuid\Uuid;
+use App\ProcessManager\Application\Message\ProcessManager\Command\Start;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,9 +24,7 @@ class DevCommand extends Command
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $sagaId = new SagaId(Uuid::uuid4()->toString());
-        $tableId = new TableId('SomeId');
-        $message = new StartTableService($sagaId, $tableId);
+        $message = new Start('SomeTableId');
         $this->messageBus->dispatch($message);
         return Command::SUCCESS;
     }

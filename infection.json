@@ -26,6 +26,6 @@
     "@number": true,
     "@removal": true
   },
-  "testFrameworkOptions": "--verbose",
+  "testFrameworkOptions": "",
   "testFramework": "phpunit"
 }

@@ -21,7 +21,7 @@ services:
             - ../:/app/
             - ./php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
             - app_home:/home/developer
-              #- ../../.ssh:/home/developer/.ssh
+#            - ../../.ssh:/home/developer/.ssh
         working_dir: /app
         tty: true
         networks:

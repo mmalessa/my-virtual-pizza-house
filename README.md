@@ -27,7 +27,7 @@ make dev-go
 ./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
 
 # inside 2nd docker console
-./bin/console app:waiter:start TBL1
+./bin/console app:serving-customers:start TBL1
 ```
 Nothing spectacular, but... it works!
 

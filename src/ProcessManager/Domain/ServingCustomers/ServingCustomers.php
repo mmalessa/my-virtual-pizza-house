@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\ProcessManager\Domain;
+namespace App\ProcessManager\Domain\ServingCustomers;
 
-class TableService
+class ServingCustomers
 {
-    private TableServiceStatus $status = TableServiceStatus::Started;
+    private ServingCustomersStatus $status = ServingCustomersStatus::Started;
     private array $kitchenOrders = [];
     private bool $menuWasShownStatus = false;
     private array $menuShownCustomer = [];
@@ -22,7 +22,7 @@ class TableService
 
     public function finishService()
     {
-        $this->status = TableServiceStatus::Ended;
+        $this->status = ServingCustomersStatus::Ended;
     }
 
     public function thisMenuWasShownToCustomer(array $menuShownCustomer)

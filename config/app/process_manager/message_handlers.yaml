@@ -13,4 +13,4 @@ services:
         bind:
             $messageBus: '@process_manager.message.bus'
             $logger: '@monolog.logger.process_manager'
-            $tableServiceRepository: '@App\ProcessManager\Domain\TableServiceRepositoryInterface'
+            $servingCustomersRepository: '@App\ProcessManager\Domain\ServingCustomers\ServingCustomersRepositoryInterface'

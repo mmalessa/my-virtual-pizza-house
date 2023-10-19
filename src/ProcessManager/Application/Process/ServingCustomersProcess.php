@@ -8,42 +8,42 @@ use App\ProcessManager\Application\Message\Kitchen\Command\DoPizza;
 use App\ProcessManager\Application\Message\Kitchen\Event\PizzaDone;
 use App\ProcessManager\Application\Message\Menu\Command\GetMenu;
 use App\ProcessManager\Application\Message\Menu\Event\MenuGot;
-use App\ProcessManager\Application\Message\ProcessManager\Event\TableServiceStarted;
+use App\ProcessManager\Application\Message\ProcessManager\Event\ServingCustomersStarted;
+use App\ProcessManager\Application\Message\Waiter\Command\FinishClient;
 use App\ProcessManager\Application\Message\Waiter\Command\PlaceOrder;
 use App\ProcessManager\Application\Message\Waiter\Command\ServePizzas;
 use App\ProcessManager\Application\Message\Waiter\Command\ShowBill;
 use App\ProcessManager\Application\Message\Waiter\Command\ShowMenu;
-use App\ProcessManager\Application\Message\Waiter\Command\FinishClient;
 use App\ProcessManager\Application\Message\Waiter\Event\BillPaid;
 use App\ProcessManager\Application\Message\Waiter\Event\ClientFinished;
 use App\ProcessManager\Application\Message\Waiter\Event\MenuShown;
 use App\ProcessManager\Application\Message\Waiter\Event\OrderPlaced;
 use App\ProcessManager\Application\Message\Waiter\Event\PizzasServed;
-use App\ProcessManager\Domain\TableService;
-use App\ProcessManager\Domain\TableServiceRepositoryInterface;
+use App\ProcessManager\Domain\ServingCustomers\ServingCustomers;
+use App\ProcessManager\Domain\ServingCustomers\ServingCustomersRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class TableServiceProcess
+class ServingCustomersProcess
 {
     public function __construct(
         protected readonly MessageBusInterface $messageBus,
         protected readonly LoggerInterface $logger,
-        protected readonly TableServiceRepositoryInterface $tableServiceRepository
+        protected readonly ServingCustomersRepositoryInterface $servingCustomersRepository
     )
     {
     }
 
     #[AsMessageHandler]
-    public function onTableServiceStarted(TableServiceStarted $event): void {
+    public function onServingCustomersStarted(ServingCustomersStarted $event): void {
         $processId = $event->processId;
-        $tableService = TableService::create($processId);
-        $this->tableServiceRepository->save($tableService);
+        $servingCustomers = ServingCustomers::create($processId);
+        $this->servingCustomersRepository->save($servingCustomers);
 
         $this->logger->info(sprintf(
-            "[%s] onTableServiceStarted (tableId: %s)",
+            "[%s] onServingCustomersStarted (tableId: %s)",
             $processId,
             $event->tableId
         ));
@@ -53,7 +53,7 @@ class TableServiceProcess
     #[AsMessageHandler]
     public function onMenuGot(MenuGot $event): void {
         $sagaId = $event->sagaId;
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
         $this->logger->info(sprintf(
             "[%s] onMenuGot",
             $sagaId
@@ -68,7 +68,7 @@ class TableServiceProcess
             $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $sagaId));
             $this->messageBus->dispatch(new PlaceOrder($sagaId));
         }
-        $this->tableServiceRepository->save($tableService);
+        $this->servingCustomersRepository->save($tableService);
     }
 
     #[AsMessageHandler]
@@ -80,11 +80,11 @@ class TableServiceProcess
             $sagaId
         ));
 
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
         $tableService->menuWasShown();
         $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
         $this->messageBus->dispatch(new PlaceOrder($sagaId));
-        $this->tableServiceRepository->save($tableService);
+        $this->servingCustomersRepository->save($tableService);
     }
 
     #[AsMessageHandler]
@@ -97,7 +97,7 @@ class TableServiceProcess
             $sagaId
         ));
 
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
 
         foreach ($orderList as $order) {
             for ($q=1; $q<=$order['quantity']; $q++) {
@@ -115,7 +115,7 @@ class TableServiceProcess
                 $this->messageBus->dispatch(new DoPizza($sagaId, $kitchenOrderId, $order['id'], $order['size']));
             }
         }
-        $this->tableServiceRepository->save($tableService);
+        $this->servingCustomersRepository->save($tableService);
     }
 
     #[AsMessageHandler]
@@ -123,7 +123,7 @@ class TableServiceProcess
         $sagaId = $event->sagaId;
         $kitchenOrderId = $event->kitchenOrderId;
 
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
         $tableService->kitchenOrderDone($kitchenOrderId);
         $this->logger->info(sprintf(
             "[%s:%s] onPizza Done",
@@ -138,7 +138,7 @@ class TableServiceProcess
         } else {
             $this->logger->info(sprintf("[%s] Not all pizzas ready. We are waiting.", $sagaId));
         }
-        $this->tableServiceRepository->save($tableService);
+        $this->servingCustomersRepository->save($tableService);
     }
 
     #[AsMessageHandler]
@@ -146,7 +146,7 @@ class TableServiceProcess
         $sagaId = $event->sagaId;
         $this->logger->info(sprintf("[%s] onPizzasServed", $sagaId));
 
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
         $bill = $tableService->getBill();
         $delayMs = 2000;
         $this->logger->info(sprintf(
@@ -161,9 +161,9 @@ class TableServiceProcess
     public function onBillPaid(BillPaid $event): void {
         $sagaId = $event->sagaId;
         $this->logger->info(sprintf("[%s] onBillPaid", $sagaId));
-        $tableService = $this->tableServiceRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($sagaId);
         $tableService->finishService();
-        $this->tableServiceRepository->save($tableService);
+        $this->servingCustomersRepository->save($tableService);
         $this->logger->info(sprintf("[%s] Dispatch->ThankClient", $sagaId));
         $this->messageBus->dispatch(new FinishClient($sagaId));
     }

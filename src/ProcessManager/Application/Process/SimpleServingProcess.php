@@ -6,6 +6,12 @@ namespace App\ProcessManager\Application\Process;
 
 use App\ProcessManager\Application\Message\ProcessManager\Command\StartSimpleServing;
 use App\ProcessManager\Application\Message\ProcessManager\Event\SimpleServingStarted;
+use App\ProcessManager\Application\Message\Waiter\Command\FinishClient;
+use App\ProcessManager\Application\Message\Waiter\Command\PlaceOrder;
+use App\ProcessManager\Application\Message\Waiter\Command\ShowBill;
+use App\ProcessManager\Application\Message\Waiter\Event\BillPaid;
+use App\ProcessManager\Application\Message\Waiter\Event\ClientFinished;
+use App\ProcessManager\Application\Message\Waiter\Event\OrderPlaced;
 use App\ProcessManager\Domain\ServingCustomers\ServingCustomersRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
@@ -43,9 +49,47 @@ class SimpleServingProcess
             return;
         }
         $processId = $event->processId;
+        $this->logger->info(sprintf("[%s] onSimpleServingStarted", $processId));
+        $this->messageBus->dispatch(new PlaceOrder($processId));
+    }
+
+    #[AsMessageHandler]
+    public function onOrderPlaced(OrderPlaced $event): void
+    {
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
+        $this->logger->info(sprintf("[%s] onOrderPlaced", $processId));
+        $bill = [
+            "sum" => [
+                'PLN' => 3.50
+            ],
+            "items" => [],
+        ];
+        $this->messageBus->dispatch(new ShowBill($processId, $bill));
+    }
+
+    #[AsMessageHandler]
+    public function onBillPaid(BillPaid $event): void
+    {
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
+        $this->logger->info(sprintf("[%s] onBillPaid", $processId));
+        $this->messageBus->dispatch(new FinishClient($processId));
+    }
+
+    #[AsMessageHandler]
+    public function onClientFinished(ClientFinished $event): void
+    {
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
         $this->logger->info(sprintf(
-            "[%s] onSimpleServingStarted",
-            $processId,
+            "[%s] *** END OF PROCESS ***",
+            $event->processId
         ));
     }
 

@@ -63,6 +63,9 @@ class ServingCustomersProcess
     #[AsMessageHandler]
     public function onServingCustomersStarted(ServingCustomersStarted $event): void
     {
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
         $processId = $event->processId;
         $servingCustomers = ServingCustomers::create($processId);
         $this->servingCustomersRepository->save($servingCustomers);
@@ -78,21 +81,24 @@ class ServingCustomersProcess
     #[AsMessageHandler]
     public function onMenuGot(MenuGot $event): void
     {
-        $sagaId = $event->processId;
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
+        $tableService = $this->servingCustomersRepository->get($processId);
         $this->logger->info(sprintf(
             "[%s] onMenuGot",
-            $sagaId
+            $processId
         ));
 
         // Decision based on the state of the saga
         if ($tableService->canShowMenu()) {
-            $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
+            $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $processId));
             $tableService->thisMenuWasShownToCustomer($event->menu);
             $this->messageBus->dispatch(new ShowMenu($event->processId, $event->menu));
         } else {
-            $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $sagaId));
-            $this->messageBus->dispatch(new PlaceOrder($sagaId));
+            $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $processId));
+            $this->messageBus->dispatch(new PlaceOrder($processId));
         }
         $this->servingCustomersRepository->save($tableService);
     }
@@ -100,32 +106,38 @@ class ServingCustomersProcess
     #[AsMessageHandler]
     public function onMenuShown(MenuShown $event): void
     {
-        $sagaId = $event->processId;
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
 
         $this->logger->info(sprintf(
             "[%s] onMenuShown",
-            $sagaId
+            $processId
         ));
 
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($processId);
         $tableService->menuWasShown();
-        $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
-        $this->messageBus->dispatch(new PlaceOrder($sagaId));
+        $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $processId));
+        $this->messageBus->dispatch(new PlaceOrder($processId));
         $this->servingCustomersRepository->save($tableService);
     }
 
     #[AsMessageHandler]
     public function onOrderPlaced(OrderPlaced $event): void
     {
-        $sagaId = $event->processId;
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
         $orderList = $event->orderList;
 
         $this->logger->info(sprintf(
             "[%s] onOrderPlaced",
-            $sagaId
+            $processId
         ));
 
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($processId);
 
         foreach ($orderList as $order) {
             for ($q=1; $q<=$order['quantity']; $q++) {
@@ -135,12 +147,12 @@ class ServingCustomersProcess
                 $tableService->addKitchenOrder($kitchenOrderId, $menuId, $pizzaSize);
                 $this->logger->info(sprintf(
                     "[%s:%s] Dispatch->DoPizza %s(%s)",
-                    $sagaId,
+                    $processId,
                     $kitchenOrderId,
                     $order['id'],
                     $order['size']
                 ));
-                $this->messageBus->dispatch(new DoPizza($sagaId, $kitchenOrderId, $order['id'], $order['size']));
+                $this->messageBus->dispatch(new DoPizza($processId, $kitchenOrderId, $order['id'], $order['size']));
             }
         }
         $this->servingCustomersRepository->save($tableService);
@@ -149,23 +161,26 @@ class ServingCustomersProcess
     #[AsMessageHandler]
     public function onPizzaDone(PizzaDone $event): void
     {
-        $sagaId = $event->processId;
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
         $kitchenOrderId = $event->kitchenOrderId;
 
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($processId);
         $tableService->kitchenOrderDone($kitchenOrderId);
         $this->logger->info(sprintf(
             "[%s:%s] onPizza Done",
-            $sagaId,
+            $processId,
             $kitchenOrderId
         ));
 
         if ($tableService->allOrdersDone()) {
-            $this->logger->info(sprintf("[%s] All Pizzas done! All pizzas can be served!", $sagaId));
+            $this->logger->info(sprintf("[%s] All Pizzas done! All pizzas can be served!", $processId));
             $pizzasToServe = $tableService->getPizzasToServe();
-            $this->messageBus->dispatch(new ServePizzas($sagaId, $pizzasToServe));
+            $this->messageBus->dispatch(new ServePizzas($processId, $pizzasToServe));
         } else {
-            $this->logger->info(sprintf("[%s] Not all pizzas ready. We are waiting.", $sagaId));
+            $this->logger->info(sprintf("[%s] Not all pizzas ready. We are waiting.", $processId));
         }
         $this->servingCustomersRepository->save($tableService);
     }
@@ -173,36 +188,48 @@ class ServingCustomersProcess
     #[AsMessageHandler]
     public function onPizzasServed(PizzasServed $event): void
     {
-        $sagaId = $event->processId;
-        $this->logger->info(sprintf("[%s] onPizzasServed", $sagaId));
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
+        $this->logger->info(sprintf("[%s] onPizzasServed", $processId));
 
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        $tableService = $this->servingCustomersRepository->get($processId);
         $bill = $tableService->getBill();
         $delayMs = 2000;
         $this->logger->info(sprintf(
             "[%s] Dispatch->ShowBill with delay %d ms",
-            $sagaId,
+            $processId,
             $delayMs
         ));
-        $this->messageBus->dispatch(new ShowBill($sagaId, $bill));
+        $this->messageBus->dispatch(new ShowBill($processId, $bill));
     }
 
     #[AsMessageHandler]
     public function onBillPaid(BillPaid $event): void
     {
-        $sagaId = $event->processId;
-        $this->logger->info(sprintf("[%s] onBillPaid", $sagaId));
-        $tableService = $this->servingCustomersRepository->get($sagaId);
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $processId = $event->processId;
+        $this->logger->info(sprintf("[%s] onBillPaid", $processId));
+        $tableService = $this->servingCustomersRepository->get($processId);
         $tableService->finishService();
         $this->servingCustomersRepository->save($tableService);
-        $this->logger->info(sprintf("[%s] Dispatch->ThankClient", $sagaId));
-        $this->messageBus->dispatch(new FinishClient($sagaId));
+        $this->logger->info(sprintf("[%s] Dispatch->ThankClient", $processId));
+        $this->messageBus->dispatch(new FinishClient($processId));
     }
 
     #[AsMessageHandler]
     public function onClientFinished(ClientFinished $event): void
     {
-        $this->logger->info("*** END OF PROCESS ***");
+        if (!$this->isSupportable($event->processId)) {
+            return;
+        }
+        $this->logger->info(sprintf(
+            "[%s] *** END OF PROCESS ***",
+            $event->processId
+        ));
     }
 
     private function isSupportable(string $processId): bool

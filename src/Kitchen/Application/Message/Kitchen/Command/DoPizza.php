@@ -5,23 +5,16 @@ declare(strict_types=1);
 namespace App\Kitchen\Application\Message\Kitchen\Command;
 
 use App\Kitchen\Application\Message\KitchenMessageInterface;
-use Ramsey\Uuid\Uuid;
 
 class DoPizza implements KitchenMessageInterface
 {
     public function __construct(
-        public string $sagaId,
+        public string $processId,
         public string $kitchenOrderId,
         public string $menuId,
         public string $pizzaSize
     )
     {
-        if (empty($this->sagaId) || !Uuid::isValid($this->sagaId)) {
-            throw new \InvalidArgumentException("SagaId cannot be empty and must be UUID(v4)");
-        }
-        if (empty($this->kitchenOrderId) || !Uuid::isValid($this->kitchenOrderId)) {
-            throw new \InvalidArgumentException("KitchenOrderId cannot be empty and must be UUID(v4)");
-        }
         if (empty($this->menuId)) {
             throw new \InvalidArgumentException("MenuId cannot be empty");
         }

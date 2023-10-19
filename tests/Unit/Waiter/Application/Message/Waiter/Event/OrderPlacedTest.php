@@ -13,7 +13,7 @@ class OrderPlacedTest extends TestCase
     public function testOrderPlaced(string $sagaId, array $orderList)
     {
         $placeOrder = new OrderPlaced($sagaId, $orderList);
-        $this->assertEquals($sagaId, $placeOrder->sagaId);
+        $this->assertEquals($sagaId, $placeOrder->processId);
         $this->assertEquals($orderList, $placeOrder->orderList);
     }
 

@@ -24,7 +24,7 @@ class GetMenuHandler
 
     public function __invoke(GetMenu $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $this->logger->info(sprintf(
             "[%s] GetMenu received",
             $sagaId

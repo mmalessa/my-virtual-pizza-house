@@ -8,6 +8,7 @@ use App\ProcessManager\Application\Message\Kitchen\Command\DoPizza;
 use App\ProcessManager\Application\Message\Kitchen\Event\PizzaDone;
 use App\ProcessManager\Application\Message\Menu\Command\GetMenu;
 use App\ProcessManager\Application\Message\Menu\Event\MenuGot;
+use App\ProcessManager\Application\Message\ProcessManager\Command\StartServingCustomers;
 use App\ProcessManager\Application\Message\ProcessManager\Event\ServingCustomersStarted;
 use App\ProcessManager\Application\Message\Waiter\Command\FinishClient;
 use App\ProcessManager\Application\Message\Waiter\Command\PlaceOrder;
@@ -28,6 +29,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class ServingCustomersProcess
 {
+    private const PROCESS_NAME = "ServingCustomers";
+
     public function __construct(
         protected readonly MessageBusInterface $messageBus,
         protected readonly LoggerInterface $logger,
@@ -37,7 +40,29 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onServingCustomersStarted(ServingCustomersStarted $event): void {
+    public function startProcess(StartServingCustomers $command): void
+    {
+        $processId = sprintf(
+            "%s:%s",
+            self::PROCESS_NAME,
+            Uuid::uuid6()->toString()
+        );
+
+        $this->logger->info(sprintf(
+            "We start serving customers at table: %s (New ProcessId: %s)",
+            $command->tableId,
+            $processId
+        ));
+
+        $this->messageBus->dispatch(new ServingCustomersStarted(
+            $processId,
+            $command->tableId
+        ));
+    }
+
+    #[AsMessageHandler]
+    public function onServingCustomersStarted(ServingCustomersStarted $event): void
+    {
         $processId = $event->processId;
         $servingCustomers = ServingCustomers::create($processId);
         $this->servingCustomersRepository->save($servingCustomers);
@@ -51,8 +76,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onMenuGot(MenuGot $event): void {
-        $sagaId = $event->sagaId;
+    public function onMenuGot(MenuGot $event): void
+    {
+        $sagaId = $event->processId;
         $tableService = $this->servingCustomersRepository->get($sagaId);
         $this->logger->info(sprintf(
             "[%s] onMenuGot",
@@ -63,7 +89,7 @@ class ServingCustomersProcess
         if ($tableService->canShowMenu()) {
             $this->logger->info(sprintf("[%s] Dispatch->ShowMenu", $sagaId));
             $tableService->thisMenuWasShownToCustomer($event->menu);
-            $this->messageBus->dispatch(new ShowMenu($event->sagaId, $event->menu));
+            $this->messageBus->dispatch(new ShowMenu($event->processId, $event->menu));
         } else {
             $this->logger->info(sprintf("[%s] Menu was shown before. Dispatch->ShowMenu", $sagaId));
             $this->messageBus->dispatch(new PlaceOrder($sagaId));
@@ -72,8 +98,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onMenuShown(MenuShown $event): void {
-        $sagaId = $event->sagaId;
+    public function onMenuShown(MenuShown $event): void
+    {
+        $sagaId = $event->processId;
 
         $this->logger->info(sprintf(
             "[%s] onMenuShown",
@@ -88,8 +115,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onOrderPlaced(OrderPlaced $event): void {
-        $sagaId = $event->sagaId;
+    public function onOrderPlaced(OrderPlaced $event): void
+    {
+        $sagaId = $event->processId;
         $orderList = $event->orderList;
 
         $this->logger->info(sprintf(
@@ -119,8 +147,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onPizzaDone(PizzaDone $event): void {
-        $sagaId = $event->sagaId;
+    public function onPizzaDone(PizzaDone $event): void
+    {
+        $sagaId = $event->processId;
         $kitchenOrderId = $event->kitchenOrderId;
 
         $tableService = $this->servingCustomersRepository->get($sagaId);
@@ -142,8 +171,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onPizzasServed(PizzasServed $event): void {
-        $sagaId = $event->sagaId;
+    public function onPizzasServed(PizzasServed $event): void
+    {
+        $sagaId = $event->processId;
         $this->logger->info(sprintf("[%s] onPizzasServed", $sagaId));
 
         $tableService = $this->servingCustomersRepository->get($sagaId);
@@ -158,8 +188,9 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onBillPaid(BillPaid $event): void {
-        $sagaId = $event->sagaId;
+    public function onBillPaid(BillPaid $event): void
+    {
+        $sagaId = $event->processId;
         $this->logger->info(sprintf("[%s] onBillPaid", $sagaId));
         $tableService = $this->servingCustomersRepository->get($sagaId);
         $tableService->finishService();
@@ -169,7 +200,13 @@ class ServingCustomersProcess
     }
 
     #[AsMessageHandler]
-    public function onClientFinished(ClientFinished $event): void {
+    public function onClientFinished(ClientFinished $event): void
+    {
         $this->logger->info("*** END OF PROCESS ***");
+    }
+
+    private function isSupportable(string $processId): bool
+    {
+        return str_starts_with($processId, sprintf("%s:", self::PROCESS_NAME));
     }
 }

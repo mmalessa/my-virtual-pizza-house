@@ -9,11 +9,8 @@ use Ramsey\Uuid\Uuid;
 
 readonly class ShowBill implements ProcessManagerMessageInterface
 {
-    public function __construct(public string $sagaId, public array $bill)
+    public function __construct(public string $processId, public array $bill)
     {
-        if (empty($this->sagaId) || !Uuid::isValid($this->sagaId)) {
-            throw new \InvalidArgumentException("SagaId cannot be empty and must be UUID(v4)");
-        }
         if (empty($this->bill)) {
             throw new \InvalidArgumentException("Bill cannot be empty");
         }

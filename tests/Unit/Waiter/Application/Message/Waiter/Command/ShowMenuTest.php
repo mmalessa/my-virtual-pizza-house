@@ -13,7 +13,7 @@ class ShowMenuTest extends TestCase
     public function testShowMenu(string $sagaId, array $menu)
     {
         $showMenu = new ShowMenu($sagaId, $menu);
-        $this->assertEquals($sagaId, $showMenu->sagaId);
+        $this->assertEquals($sagaId, $showMenu->processId);
         $this->assertEquals($menu, $showMenu->menu);
     }
 

@@ -24,7 +24,7 @@ class PlaceOrderHandler
 
     public function __invoke(PlaceOrder $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $this->logger->info(sprintf(
             "[%s] PlaceOrder",
             $sagaId

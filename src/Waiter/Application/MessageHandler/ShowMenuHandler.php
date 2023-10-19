@@ -24,7 +24,7 @@ class ShowMenuHandler
 
     public function __invoke(ShowMenu $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $this->logger->info(sprintf(
             "[%s] ShowMenu",
             $sagaId

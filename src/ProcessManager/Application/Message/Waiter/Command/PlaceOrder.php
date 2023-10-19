@@ -9,10 +9,7 @@ use Ramsey\Uuid\Uuid;
 
 class PlaceOrder implements ProcessManagerMessageInterface
 {
-    public function __construct(public string $sagaId)
+    public function __construct(public string $processId)
     {
-        if (empty($this->sagaId) || !Uuid::isValid($this->sagaId)) {
-            throw new \InvalidArgumentException("SagaId cannot be empty and must be UUID(v4)");
-        }
     }
 }

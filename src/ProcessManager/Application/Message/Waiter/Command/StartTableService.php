@@ -9,7 +9,7 @@ use App\ProcessManager\Application\Message\ProcessManagerMessageInterface;
 class StartTableService implements ProcessManagerMessageInterface
 {
     public function __construct(
-        string $sagaId,
+        string $processId,
         string $tableId
     )
     {

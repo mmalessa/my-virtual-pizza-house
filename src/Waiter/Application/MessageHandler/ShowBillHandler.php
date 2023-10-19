@@ -26,7 +26,7 @@ class ShowBillHandler
 
     public function __invoke(ShowBill $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $this->logger->info(sprintf(
             "[%s] ShowBill",
             $sagaId

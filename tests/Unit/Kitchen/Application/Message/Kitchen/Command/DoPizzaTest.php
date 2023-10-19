@@ -13,7 +13,7 @@ class DoPizzaTest extends TestCase
     public function testDoPizza(string $sagaId, string $kitchenOrderId, string $pizzaId, string $pizzaSize)
     {
         $doPizza = new DoPizza($sagaId, $kitchenOrderId, $pizzaId, $pizzaSize);
-        $this->assertEquals($sagaId, $doPizza->sagaId);
+        $this->assertEquals($sagaId, $doPizza->processId);
         $this->assertEquals($kitchenOrderId, $doPizza->kitchenOrderId);
         $this->assertEquals($pizzaId, $doPizza->menuId);
         $this->assertEquals($pizzaSize, $doPizza->pizzaSize);

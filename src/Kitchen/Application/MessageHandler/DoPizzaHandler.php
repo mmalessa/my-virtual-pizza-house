@@ -24,7 +24,7 @@ class DoPizzaHandler
 
     public function __invoke(DoPizza $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $kitchenOrderId = $command->kitchenOrderId;
         $this->logger->info(sprintf(
             "[%s:%s] DoPizza: %s(%s)",

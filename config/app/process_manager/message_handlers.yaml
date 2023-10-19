@@ -1,12 +1,5 @@
 services:
 
-    App\ProcessManager\Application\CommandHandler\:
-        resource: '%kernel.project_dir%/src/ProcessManager/Application/CommandHandler/*Handler.php'
-        autoconfigure: true
-        bind:
-            $messageBus: '@process_manager.message.bus'
-            $logger: '@monolog.logger.process_manager'
-
     App\ProcessManager\Application\Process\:
         resource: '%kernel.project_dir%/src/ProcessManager/Application/Process/*Process.php'
         autoconfigure: true

@@ -8,7 +8,7 @@ use App\Menu\Application\Message\MenuMessageInterface;
 
 readonly class MenuGot  implements MenuMessageInterface
 {
-    public function __construct(public string $sagaId, public array $menu)
+    public function __construct(public string $processId, public array $menu)
     {
     }
 }

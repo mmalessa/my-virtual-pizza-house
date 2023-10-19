@@ -24,8 +24,8 @@ class ServePizzasHandler
 
     public function __invoke(ServePizzas $command)
     {
-        $this->logger->info(sprintf("[%s] ServePizzas", $command->sagaId));
+        $this->logger->info(sprintf("[%s] ServePizzas", $command->processId));
         $this->communicator->infoAboutServedPizzas($command->pizzas);
-        $this->messageBus->dispatch(new PizzasServed($command->sagaId));
+        $this->messageBus->dispatch(new PizzasServed($command->processId));
     }
 }

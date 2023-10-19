@@ -7,7 +7,7 @@ use App\ProcessManager\Application\Message\ProcessManagerMessageInterface;
 
 readonly class GetMenu implements ProcessManagerMessageInterface
 {
-    public function __construct(public string $sagaId)
+    public function __construct(public string $processId)
     {
     }
 }

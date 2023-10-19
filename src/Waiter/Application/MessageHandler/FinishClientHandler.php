@@ -21,12 +21,12 @@ class FinishClientHandler
 
     public function __invoke(FinishClient $command)
     {
-        $sagaId = $command->sagaId;
+        $sagaId = $command->processId;
         $this->logger->info(sprintf(
             "[%s] ThankClient",
             $sagaId
         ));
         echo "---- Thank you very much for staying with us. Welcome again! ----\n";
-        $this->messageBus->dispatch(new ClientFinished($command->sagaId));
+        $this->messageBus->dispatch(new ClientFinished($command->processId));
     }
 }

@@ -31,6 +31,7 @@ class StartServingCustomersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln("Start Serving Customers");
         $startServingCustomers = new StartServingCustomers($input->getArgument('tableid'));
         $this->messageBus->dispatch($startServingCustomers);
         return Command::SUCCESS;

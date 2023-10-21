@@ -13,4 +13,4 @@ services:
         class: Mmalessa\SomeTools\SomeDelay
         arguments:
             $logger: '@monolog.logger.waiter'
-            $delayTime: 0
+            $delayTime: 1

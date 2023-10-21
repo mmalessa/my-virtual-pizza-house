@@ -24,6 +24,7 @@ build: ## Build image
 .PHONY: init
 init: ## Init application
 	@$(DC) exec app composer install
+	@$(DC) exec app bash -c "bin/console messenger:setup-transports"
 
 ### DEV
 
@@ -67,6 +68,10 @@ tests-rector: ## Run rector refactoring tool (dry-run)
 dev-consume: ## Start consuming
 	@$(DC) exec -it -u developer app php -d xdebug.start_with_request=0 ./bin/console messenger:consume process_manager_transport menu_transport waiter_transport kitchen_transport
 
-.PHONY: dev-go
-dev-go: ## run dev command
-	@$(DC) exec -it -u developer app php -d xdebug.start_with_request=0 ./bin/console app:order-manager:start TBL1
+.PHONY: dev-start-serving-customers
+dev-start-serving-customers: ## start-serving-customers command
+	@$(DC) exec -it -u developer app php -d xdebug.start_with_request=0 ./bin/console app:serving-customers:start TBL1
+
+.PHONY: dev-start-simple-serving
+dev-start-simple-serving: # start-serving-customers command
+	@$(DC) exec -it -u developer app php -d xdebug.start_with_request=0 ./bin/console app:simple-serving:start

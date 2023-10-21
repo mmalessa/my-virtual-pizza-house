@@ -23,6 +23,7 @@ class StartSimpleServingCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln("Start Simple Serving");
         $startSimpleServing = new StartSimpleServing();
         $this->messageBus->dispatch($startSimpleServing);
         return Command::SUCCESS;

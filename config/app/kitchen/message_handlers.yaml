@@ -12,5 +12,5 @@ services:
     app.kitchen.some_delay:
         class: Mmalessa\SomeTools\SomeDelay
         arguments:
-            $delayTime: 0
+            $delayTime: 1
             $logger: '@monolog.logger.kitchen'

@@ -9,7 +9,7 @@ This is a message-driven, service-oriented architecture with asynchronous flow o
 
 The heart of the system is the "Process Manager" module, which outsources tasks to other modules/services.
 
-Each module runs as a separate process (messenger:consume) in a separate container. Thanks to this, the whole thing is very well scalable.
+Each module runs as a separate process (messenger:consume) optionally in a separate container. Thanks to this, the whole thing is very well scalable.
 _(The only problem "for now" is the scalability of the "Process Manager" module. I'm working on solving it.)_
 
 I used the "Process Manager"/"Saga" pattern here at the level of the entire process/processes. 

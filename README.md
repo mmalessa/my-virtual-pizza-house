@@ -2,13 +2,32 @@
 A space to explore modular asynchrony in PHP   
 ...on the example of a pizza house.
 
+## Introduction
+
+We have a reactive system here. 
+This is a message-driven, service-oriented architecture with asynchronous flow orchestration.
+
+The heart of the system is the "Process Manager" module, which outsources tasks to other modules/services.
+
+Each module runs as a separate process (messenger:consume) in a separate container. Thanks to this, the whole thing is very well scalable.
+_(The only problem "for now" is the scalability of the "Process Manager" module. I'm working on solving it.)_
+
+I used the "Process Manager"/"Saga" pattern here at the level of the entire process/processes. 
+Each message that goes to the Process Manager triggers a decision-making process (in the handler). 
+The handler has access to the process state (entity/aggregate). 
+The decision is therefore made based on data from the message and from the current "process state".
+Thanks to this approach, we can handle very long-term processes.
+We can integrate our system with remote systems and wait a long time for information from it.
+
+There is nothing stopping you from expanding the process elements to include compensation. 
+Then the system will become fully compliant with the "Saga" pattern.
+
 ## Kickstart
 ```shell
 make up
+make init
 make console
 
-# inside console
-composer install
 ```
 
 ## Start the machinery

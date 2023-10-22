@@ -1,6 +1,6 @@
 services:
     App\ProcessManager\UI\ConsoleCommand\:
-        resource: '%kernel.project_dir%/src/ProcessManager/UI/ConsoleCommand/*Command.php'
+        resource: '%kernel.project_dir%/src/ProcessManager/UI/ConsoleCommand/**/*Command.php'
         tags:
             - { name: console.command }
         bind:

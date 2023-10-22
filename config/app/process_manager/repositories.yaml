@@ -14,3 +14,15 @@ services:
         arguments:
             $client: '@app.repository.redis'
             $ttl: 3600
+
+
+    App\ProcessManager\Infrastructure\Common\Repository\File\MessageRepository:
+        arguments:
+            $storageDirectory: '/app/storage/'
+
+    app.simple-serving.repository:
+        class: EventSauce\EventSourcing\EventSourcedAggregateRootRepository
+        arguments:
+            $aggregateRootClassName: App\ProcessManager\Domain\SimpleServing\SimpleServing
+            $messageRepository: '@App\ProcessManager\Infrastructure\Common\Repository\File\MessageRepository'
+

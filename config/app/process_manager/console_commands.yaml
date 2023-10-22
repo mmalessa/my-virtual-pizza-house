@@ -5,3 +5,4 @@ services:
             - { name: console.command }
         bind:
             $messageBus: '@process_manager.message.bus'
+            $simpleServingRepository: '@app.simple-serving.repository'

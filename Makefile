@@ -25,6 +25,16 @@ build: ## Build image
 init: ## Init application
 	@$(DC) exec app composer install
 	@$(DC) exec app bash -c "bin/console messenger:setup-transports"
+	@$(MAKE) migrate
+
+.PHONY: migrate
+migrate: ## Run migrations (up)
+	@$(DC) exec -it -u developer app bash -c "/app/bin/console doctrine:migrations:migrate -n"
+
+.PHONY: migrate-down
+migrate-down: ## Run migrations (down)
+	@$(DC) exec -it -u developer app bash -c "/app/bin/console doctrine:migrations:migrate prev -n"
+
 
 ### DEV
 

@@ -72,6 +72,19 @@ services:
         ports:
             - "8081:8081"
 
+    postgres:
+        image: postgres:16.0-alpine3.18
+        container_name: ${COMPOSE_PROJECT_NAME}-postgres
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
+            - ./postgresql/init.sql:/docker-entrypoint-initdb.d/10-init.sql
+        networks:
+            devapp:
+        ports:
+            - 5432:5432
 networks:
     devapp:
         name: devapp
@@ -80,3 +93,4 @@ volumes:
     redis_data:
     rabbitmq_mnesia:
     app_home:
+    postgres_db:

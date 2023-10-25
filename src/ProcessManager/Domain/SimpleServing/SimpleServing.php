@@ -12,6 +12,7 @@ use EventSauce\EventSourcing\AggregateRootBehaviour;
 class SimpleServing implements AggregateRoot
 {
     use AggregateRootBehaviour;
+    private array $order = [];
 
     public static function initiate(SimpleServingId $id): self
     {
@@ -31,5 +32,11 @@ class SimpleServing implements AggregateRoot
 
     public function applyOrderPlaceed(OrderPlaceed $event): void
     {
+        $this->order = array_merge($this->order, $event->order);
+    }
+
+    public function getOrder(): array
+    {
+        return $this->order;
     }
 }

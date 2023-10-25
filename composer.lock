@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "caa1190ea1ad2c8f2782483e8f978be4",
+    "content-hash": "0276cda010405201fd9d33d160e5bc96",
     "packages": [
         {
             "name": "brick/math",
@@ -1500,6 +1500,143 @@
             "time": "2023-05-14T09:41:34+00:00"
         },
         {
+            "name": "eventsauce/id-encoding",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/IdEncoding.git",
+                "reference": "c297ecb0c4778a058dd0629072d941c4fa9aa1c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/IdEncoding/zipball/c297ecb0c4778a058dd0629072d941c4fa9aa1c5",
+                "reference": "c297ecb0c4778a058dd0629072d941c4fa9aa1c5",
+                "shasum": ""
+            },
+            "require": {
+                "ramsey/uuid": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\IdEncoding\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "ID encoding utility",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/IdEncoding/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-27T13:57:16+00:00"
+        },
+        {
+            "name": "eventsauce/message-repository-for-doctrine",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/MessageRepositoryForDoctrine.git",
+                "reference": "f4929c6468f93bc64277eae31a82548bc61290fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/MessageRepositoryForDoctrine/zipball/f4929c6468f93bc64277eae31a82548bc61290fa",
+                "reference": "f4929c6468f93bc64277eae31a82548bc61290fa",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^3.1",
+                "eventsauce/eventsauce": "^3.0",
+                "eventsauce/id-encoding": "^1.0",
+                "eventsauce/message-repository-table-schema": "^1.0",
+                "eventsauce/uuid-encoding": "^1.0",
+                "ramsey/uuid": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\MessageRepository\\DoctrineMessageRepository\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Message Repository for Doctrine DBAL 3",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/MessageRepositoryForDoctrine/tree/1.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-08T13:16:40+00:00"
+        },
+        {
+            "name": "eventsauce/message-repository-table-schema",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/MessageRepositoryTableSchema.git",
+                "reference": "328135bfab4b1a939fa3ea13a7f4421fd30abd37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/MessageRepositoryTableSchema/zipball/328135bfab4b1a939fa3ea13a7f4421fd30abd37",
+                "reference": "328135bfab4b1a939fa3ea13a7f4421fd30abd37",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\MessageRepository\\TableSchema\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Message Repository Table Schema",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/MessageRepositoryTableSchema/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-27T13:57:16+00:00"
+        },
+        {
             "name": "eventsauce/object-hydrator",
             "version": "1.4.0",
             "source": {
@@ -1562,6 +1699,51 @@
                 }
             ],
             "time": "2023-08-03T07:27:58+00:00"
+        },
+        {
+            "name": "eventsauce/uuid-encoding",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/UuidEncoding.git",
+                "reference": "f6bd8994b9a7f689d751acd9256badc677645bdf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/UuidEncoding/zipball/f6bd8994b9a7f689d751acd9256badc677645bdf",
+                "reference": "f6bd8994b9a7f689d751acd9256badc677645bdf",
+                "shasum": ""
+            },
+            "require": {
+                "ramsey/uuid": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\UuidEncoding\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "UUID encoding utility",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/UuidEncoding/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-27T13:57:16+00:00"
         },
         {
             "name": "monolog/monolog",

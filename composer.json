@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.16",
         "eventsauce/eventsauce": "^3.4",
+        "eventsauce/message-repository-for-doctrine": "^1.1",
         "predis/predis": "v2.1.2",
         "ramsey/uuid": "4.7.4",
         "symfony/amqp-messenger": "v6.2.8",

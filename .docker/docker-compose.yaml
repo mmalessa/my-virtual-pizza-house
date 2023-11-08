@@ -22,6 +22,8 @@ services:
             - ./php/php_dev.ini:/usr/local/etc/php/conf.d/99-overrides_dev.ini
             - app_home:/home/developer
             - ../../.ssh:/home/developer/.ssh
+        environment:
+            PHP_IDE_CONFIG: "serverName=dev"
         working_dir: /app
         tty: true
         networks:

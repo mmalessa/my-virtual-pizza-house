@@ -1,0 +1,40 @@
+services:
+#    messenger.senders_locator:
+#        class: App\Dev\Infrastructure\Messenger\SendersLocator
+    app.dev.messagebus.middleware.custom_send_message:
+        class: App\Dev\Infrastructure\Messenger\CustomSendMessageMiddleware
+        arguments:
+            $transport: '@messenger.transport.dev1_transport'
+
+#    AmqpSender($this->connection, $this->serializer)
+
+framework:
+    messenger:
+        transports:
+            dev1_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: dev1_messages
+                        type: topic
+                    queues:
+                        messages_for_dev1:
+                            binding_keys:
+                                - '#'
+            dev2_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: dev2_messages
+                        type: topic
+                    queues:
+                        messages_for_dev2:
+                            binding_keys:
+                                - '#'
+        routing:
+            'App\Dev\Application\Message\DevMessageInterface': [dev1_transport, dev2_transport]
+        buses:
+            dev_outbox.message.bus:
+                middleware:
+                    - 'app.dev.messagebus.middleware.custom_send_message'
+            dev_external.message.bus:

@@ -1,0 +1,8 @@
+services:
+    App\Dev\UI\ConsoleCommand\:
+        resource: '%kernel.project_dir%/src/Dev/UI/ConsoleCommand/**/*Command.php'
+        tags:
+            - { name: console.command }
+        bind:
+            $outboxMessageBus: '@dev_outbox.message.bus'
+            $externalMessageBus: '@dev_external.message.bus'

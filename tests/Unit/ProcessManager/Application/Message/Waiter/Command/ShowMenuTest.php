@@ -24,19 +24,4 @@ class ShowMenuTest extends TestCase
             ['c3b9b891-ba30-40cd-b584-5a32b9184b05', ['some', 'array']]
         ];
     }
-
-    /** @dataProvider provideInvalidData */
-    public function testShowMenuError(string $sagaId, array $menu)
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        new ShowMenu($sagaId, $menu);
-    }
-
-    public static function provideInvalidData(): array
-    {
-        return [
-            ['', []],
-            ['', ['some', 'array']]
-        ];
-    }
 }

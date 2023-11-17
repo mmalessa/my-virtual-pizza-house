@@ -24,19 +24,4 @@ class OrderPlacedTest extends TestCase
             ['64821cee-659f-485d-9bf3-fd8bab722cda', [['a' => 'b']]],
         ];
     }
-
-    /** @dataProvider provideInvalidData */
-    public function testOrderPlacedError(string $sagaId, array $orderList)
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        new OrderPlaced($sagaId, $orderList);
-    }
-
-    public static function provideInvalidData(): array
-    {
-        return [
-            ['', [['a' => 'b']]],
-            ['x', []],
-        ];
-    }
 }

@@ -66,7 +66,7 @@ tests-coverage: ## Run tests with console text coverage report (phpunit)
 
 .PHONY: tests-mutation
 tests-mutation: ## Run mutation tests (infection)
-	@$(DC) exec -it -u developer app infection
+	@$(DC) exec -it -u developer app ./vendor/bin/infection
 
 .PHONY: tests-rector
 tests-rector: ## Run rector refactoring tool (dry-run)

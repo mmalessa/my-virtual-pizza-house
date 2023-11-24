@@ -28,6 +28,7 @@
         "colinodell/psr-testlogger": ">=1.1",
         "eventsauce/code-generation": "^3.3",
         "eventsauce/test-utilities": "^3.4",
+        "phpmd/phpmd": "^2.14",
         "phpunit/phpunit": ">=10.0",
         "rector/rector": ">=0.15",
         "symfony/browser-kit": ">=6.1",

@@ -37,7 +37,7 @@ make console
 make dev-consume
 
 # 2nd console (can be several times)
-make dev-go
+make dev-start-serving-customers
 ```
 
 ### Option 2
@@ -62,7 +62,7 @@ Nothing spectacular, but... it works!
 ./bin/console messenger:consume kitchen_transport
 
 # inside 5nd docker console
-./bin/console app:waiter:start TableId
+./bin/console app:serving-customers:start TBL1
 ```
 
 You can watch RabbitMQ queues: http://localhost:1567 (user/user)

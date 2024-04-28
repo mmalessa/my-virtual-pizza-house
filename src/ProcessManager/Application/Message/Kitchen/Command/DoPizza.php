@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\ProcessManager\Application\Message\Kitchen\Command;
 
 use App\ProcessManager\Application\Message\ProcessManagerMessageInterface;
+use Mmalessa\MessengerAddonsBundle\ExternalMessageMapper\AsExternalMessage;
 
+#[AsExternalMessage(schemaId: 'pizza_house.kitchen.do_pizza')]
 readonly class DoPizza implements ProcessManagerMessageInterface
 {
     public function __construct(

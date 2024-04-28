@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -12,6 +12,8 @@
         "doctrine/orm": "^2.16",
         "eventsauce/eventsauce": "^3.4",
         "eventsauce/message-repository-for-doctrine": "^1.1",
+        "haydenpierce/class-finder": "^0.5.3",
+        "mmalessa/messenger-addons-bundle": "*",
         "predis/predis": "v2.1.2",
         "ramsey/uuid": "4.7.4",
         "symfony/amqp-messenger": "v6.2.8",
@@ -35,6 +37,12 @@
         "symfony/css-selector": ">=6.1",
         "symfony/phpunit-bridge": ">=6.1"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "mmalessa_packages/MessengerAddonsBundle"
+        }
+    ],
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,

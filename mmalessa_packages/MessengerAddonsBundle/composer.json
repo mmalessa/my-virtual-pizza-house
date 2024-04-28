@@ -1,0 +1,24 @@
+{
+  "name": "mmalessa/messenger-addons-bundle",
+  "type": "symfony-bundle",
+  "description": "Some addons for Symfony Messenger",
+  "keywords": [
+  ],
+  "homepage": "https://github.com/mmalessa/todo",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marcin Malessa",
+      "homepage": "http://github.com/mmalessa"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "symfony/framework-bundle": ">=6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mmalessa\\MessengerAddonsBundle\\": "src/"
+    }
+  }
+}

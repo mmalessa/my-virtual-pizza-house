@@ -1,0 +1,13 @@
+services:
+
+    app.tagging_sandbox.external_message_mapper:
+        class: Mmalessa\MessengerAddonsBundle\ExternalMessageMapper\ExternalMessageMapper
+        tags:
+            - {name: 'mmalessa.external_message_mapper', namespace: 'App\TaggingSandbox\Message'}
+#            - {name: 'mmalessa.external_message_mapper', namespace: 'App\ProcessManager\Application\Message'}
+
+    App\TaggingSandbox\UI\Console\:
+        resource: '%kernel.project_dir%/src/TaggingSandbox/UI/Console/**/*Command.php'
+        autoconfigure: true
+        bind:
+            $classMapper: '@app.tagging_sandbox.external_message_mapper'

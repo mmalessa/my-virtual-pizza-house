@@ -26,6 +26,9 @@
             "migrations/.gitignore"
         ]
     },
+    "mmalessa/messenger-addons-bundle": {
+        "version": "dev-dev/bundle"
+    },
     "phpstan/phpstan": {
         "version": "1.10",
         "recipe": {
